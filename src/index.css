@@ -1,0 +1,17 @@
+@import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css");
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Pretendard Variable", "Pretendard", ui-sans-serif, system-ui, sans-serif;
+  
+  /* Custom Brand Colors - Keeping current scheme */
+  --color-brand-primary: #4f46e5;    /* Indigo 600 */
+  --color-brand-secondary: #0f172a;  /* Slate 900 */
+  --color-brand-accent: #f43f5e;     /* Rose 500 */
+}
+
+@layer base {
+  body {
+    @apply font-sans bg-slate-50 text-slate-900 antialiased;
+  }
+}

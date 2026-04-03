@@ -7,7 +7,7 @@ export default defineConfig(({mode}) => {
   const env = loadEnv(mode, '.', '');
   return {
     // 1. 깃허브 페이지 배포를 위한 베이스 경로 설정 (중요!)
-    base: '/BRAND-ONE-upgrade/', 
+    base: './',
     
     plugins: [react(), tailwindcss()],
     define: {

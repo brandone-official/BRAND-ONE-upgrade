@@ -1,6 +1,7 @@
 import { useState, useRef } from "react";
 import { motion, AnimatePresence, useScroll, useTransform } from "motion/react";
 import { MessageSquare, FileText, Link2Off, LayoutGrid, Milestone, ArrowLeftRight, Phone, MessageCircle } from "lucide-react";
+import Footer from "../components/Footer";
 
 const items = [
   { name: "Strategy", type: "star", color: "text-amber-400" },
@@ -1031,6 +1032,7 @@ export default function Home() {
           <span className="hidden md:block">카톡</span>
         </motion.a>
       </div>
+      <Footer className="bg-black" />
     </div>
   );
 }

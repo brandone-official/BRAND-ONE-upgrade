@@ -1,14 +1,14 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
-import Home from "./pages/Home";
-import Service from "./pages/Service";
-import Portfolio from "./pages/Portfolio";
+import Home from "./pages/Home.tsx";
+import Service from "./pages/Service.tsx";
+import Portfolio from "./pages/Portfolio.tsx";
 import ScrollToTop from "./components/ScrollToTop";
 
 export default function App() {
   return (
-    <Router>
+    <Router basename="/BRAND-ONE-upgrade/">
       <ScrollToTop />
       <div className="min-h-screen bg-white flex flex-col">
         <Navbar />

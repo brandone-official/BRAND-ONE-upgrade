@@ -1,6 +1,7 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { X, ArrowRight, CheckCircle2, Calculator, Plus, Minus, RotateCcw } from "lucide-react";
+import Footer from "../components/Footer";
 
 const items = [
   { 
@@ -14,9 +15,21 @@ const items = [
     painPoint: "많은 비용과 시간을 쏟아부어도 눈에 띄는 성과가 없어 고민하고 계신가요?\n방향이 어긋난 실행은 에너지를 소진시킬 뿐입니다.",
     guideText: "BRAND ONE은 실행의 효율을 극대화하기 위해 브랜드의 뿌리를 단단히 내리는 전략적 설계도를 제안합니다.\n정교한 설계는 마케팅의 모든 과정을 단순한 '지출'이 아닌 '미래를 위한 자산'으로 바꿔줍니다.",
     prices: [
-      { label: "Standard (기본 체계 정립)", price: "10만 원", desc: "기존 로고·폰트·컬러 시스템 최적화 및 브랜드 슬로건 도출" },
-      { label: "Advanced (비즈니스 설계)", price: "30만 원", desc: "Standard 포함 + 핵심 가치 및 3대 중점 영역 선정, 톤앤매너 가이드" },
-      { label: "Master (통합 매니지먼트)", price: "50만 원 ~", desc: "Advanced 포함 + 6대 접점 전 채널 진단 및 1:1 전담 디렉팅" }
+      { 
+        label: "Standard (기본 체계 정립)", 
+        price: "10만 원", 
+        desc: "기존 로고·폰트·컬러 시스템 최적화 (시각적 일관성 가이드)\n브랜드 슬로건 및 핵심 키워드 도출 (커뮤니케이션 기준점)" 
+      },
+      { 
+        label: "Advanced (비즈니스 설계)", 
+        price: "30만 원", 
+        desc: "[Standard] 포함\n브랜드 핵심 가치 및 3대 중점 영역(Top 3) 선정\n전 채널 공통 적용을 위한 이미지 연출 및 톤앤매너 가이드 제공" 
+      },
+      { 
+        label: "Master (통합 매니지먼트)", 
+        price: "50만 원 ~", 
+        desc: "[Advanced] 포함\n6대 접점 전 채널 진단 및 브랜드 통합 개입 전략 수립\n제작물 우선순위 로드맵 설계 및 1개월간 브랜드 일관성 모니터링\n1:1 전담 디렉팅" 
+      }
     ]
   },
   { 
@@ -30,10 +43,30 @@ const items = [
     painPoint: "화려한 비주얼에만 집중한 나머지, 정작 검색 엔진이나 AI 답변에서\n우리 브랜드가 소외되고 있지는 않나요?",
     guideText: "BRAND ONE은 시각적인 아름다움은 물론, 고객과의 연결고리인 기술적 최적화(SEO/AEO)를 기본으로 설계합니다.\n누구나 쉽게 찾아오고, 오래 머물고 싶은 '발견되는 본진'을 만들어 드립니다.",
     prices: [
-      { label: "Standard (베이직 웹)", price: "150만 원", desc: "범용 템플릿 기반 안정적 레이아웃 + 기본 SEO/AEO 대응 설계" },
-      { label: "Advanced (비주얼 확장 웹)", price: "250만 원", desc: "Standard 포함 + 스크롤 트리거 인터랙션 및 메타 데이터 최적화" },
-      { label: "Master (프리미엄 커스텀)", price: "500만 원 ~", desc: "Advanced 포함 + 전용 영상/모션 소스 제작 및 독자적 UX 커스텀" },
-      { label: "Point Service (랜딩페이지)", price: "30만 원", desc: "특정 목적에 최적화된 고효율 페이지 디자인 및 구축 (페이지당)" }
+      { 
+        label: "Standard (베이직 웹)", 
+        price: "150만 원", 
+        desc: "범용 템플릿 기반 안정적 레이아웃 + 브랜드 전략 기반 텍스트 최적화\n기본 SEO/AEO 대응: AI와 검색 엔진이 읽을 수 있는 텍스트 구조 설계" 
+      },
+      { 
+        label: "Advanced (비주얼 확장 웹)", 
+        price: "250만 원", 
+        desc: "[Standard] 포함\n스크롤 트리거 등 인터랙션 및 고도화된 메타 데이터 최적화\n비주얼 임팩트를 위한 다층 레이어 구성 (※ 범용 소스 활용)" 
+      },
+      { 
+        label: "Master (프리미엄 커스텀)", 
+        price: "500만 원 ~", 
+        desc: "[Advanced] 포함\n브랜드 전용 영상/모션 소스 제작 및 독자적 UX 커스텀 코딩\n전문 데이터 분석 도구 연동 및 유니크한 UI 컴포넌트 설계" 
+      },
+      { 
+        label: "Point Service (랜딩페이지)", 
+        price: "30만 원", 
+        desc: "특정 목적에 최적화된 고효율 페이지가 필요할 때 제안하는 서비스입니다.\n특정 메뉴 교체, 상세 설명 페이지, 이벤트 랜딩페이지 등 단발성 작업 기준\n핵심 내용: 브랜드 보이스가 담긴 카피라이팅 + 레이아웃 최적화 + 기본 SEO 적용" 
+      }
+    ],
+    notes: [
+      "전용 영상, 고난도 인터랙션, 모션 그래픽 등 특별 소스 활용 시 별도 추가 비용이 발생할 수 있습니다.",
+      "기존 사이트의 환경(플랫폼, 코딩 구조 등)에 따라 작업 범위가 협의될 수 있습니다."
     ]
   },
   { 
@@ -47,9 +80,21 @@ const items = [
     painPoint: "매일 올라오는 기계적인 글들이 브랜드의 이미지를 오히려 평범하게 만들고 있지는 않나요?\n숫자에만 집중한 조회수는 진정한 팬을 만들지 못합니다.",
     guideText: "BRAND ONE은 클라이언트 고유의 페르소나를 투영하여, 읽히고 공감받는 브랜드 자산을 쌓아갑니다.\n시간이 흐를수록 더 깊은 신뢰를 만들어내는 진정성 있는 콘텐츠의 힘으로 고객의 마음속에 자리 잡으세요.",
     prices: [
-      { label: "Standard (월 4회)", price: "30만 원", desc: "페르소나 설정 기반 고유 보이스톤 수립 및 통합 SEO/AEO 적용" },
-      { label: "Advanced (월 8회)", price: "56만 원", desc: "Standard 포함 + 전용 이미지 컴포넌트 활용 및 전략적 키워드 믹스" },
-      { label: "Master (전략 디렉팅)", price: "100만 원 ~", desc: "Advanced 포함 + 지수 강화 전략 설계 및 6대 접점 콘텐츠 싱크 관리" }
+      { 
+        label: "Standard (월 4회)", 
+        price: "30만 원", 
+        desc: "페르소나 설정: 클라이언트의 말투와 철학을 반영한 고유 보이스톤 수립\n직접 쓴 듯한 깊이 있는 문체 + 통합 SEO/AEO 최적화 기본 적용" 
+      },
+      { 
+        label: "Advanced (월 8회)", 
+        price: "56만 원", 
+        desc: "[Standard] 포함\n브랜드 전용 이미지 컴포넌트 활용 가독성 증대\n유입 가속화를 위한 전략적 키워드 믹스 및 타겟팅 포스팅" 
+      },
+      { 
+        label: "Master (전략 디렉팅)", 
+        price: "100만 원 ~", 
+        desc: "[Advanced] 포함\n지수 강화를 위한 발행 횟수/주기 전략적 설계\n통합 성과 리포트 제공 및 6대 접점 채널 간 콘텐츠 싱크 관리" 
+      }
     ]
   },
   { 
@@ -63,7 +108,11 @@ const items = [
     painPoint: "온라인의 여러 접점을 거쳐 우리를 검색한 고객이, 정작 마지막 단계인 플레이스에서\n매력을 느끼지 못해 발길을 돌리고 있지는 않나요?",
     guideText: "플레이스는 비즈니스의 모든 매력을 응축해 보여주는 전략적 요충지입니다.\n정보와 비주얼, 로직을 정교하게 정렬하여 고객의 방문 결정이 자연스럽게 이어지도록 최적의 동선을 설계합니다.",
     prices: [
-      { label: "Master (All-in-One)", price: "30만 원", desc: "키워드 설계, 경쟁사 분석, 홍보 배너 제작, 알고리즘 최적화 (1회성)" }
+      { 
+        label: "Master (All-in-One)", 
+        price: "30만 원", 
+        desc: "전략적 키워드 설계 및 경쟁사 분석 기반 점유 전략\n플레이스 규격 맞춤 고감도 홍보 배너/소식지/이미지 큐레이션\n네이버/구글 알고리즘 최적화 및 스마트 플레이스 기능(예약/톡톡 등) 점검" 
+      }
     ]
   },
   { 
@@ -77,9 +126,29 @@ const items = [
     painPoint: "브랜드의 가치와 철학을 텍스트로만 설명하기엔 한계가 느껴질 때가 있습니다.\n정적인 정보만으로는 고객의 감성을 자극하기에 부족할 수 있습니다.",
     guideText: "기획부터 사운드 디자인까지 BRAND ONE의 감각이 담긴 영상은 백 마디 말보다 강력한 확신을 고객에게 심어줍니다.\n브랜드의 실체를 가장 입체적으로 전달하여, 고객의 기억에 오래도록 남는 임팩트를 선사하세요.",
     prices: [
-      { label: "Type A (숏폼 & 릴스)", price: "15만 / 25만", desc: "1분 내외 세로형 영상 / 후킹 자막 및 트렌디 BGM (자료편집/AI아바타)" },
-      { label: "Type B (브랜드 다큐)", price: "30만 원", desc: "10분 이내 가로형 영상 / 보유 자료 및 인터뷰 정밀 편집" },
-      { label: "Type C (리얼 후기 & 사례)", price: "30만 원", desc: "인터뷰 소스 활용 및 비포/애프터 시각화, 성과 강조 자막" }
+      { 
+        label: "Type A. [숏폼 & 릴스]", 
+        price: "15만 원", 
+        desc: "자료 기반 편집형\n1분 내외 세로형 영상 (9:16) / 후킹 자막 및 트렌디 BGM" 
+      },
+      { 
+        label: "Type B. [숏폼 & 릴스]", 
+        price: "25만 원", 
+        desc: "AI 아바타 활용\n1분 내외 세로형 영상 (9:16)\n후킹 자막 및 트렌디 BGM" 
+      },
+      { 
+        label: "Type C. [브랜드 다큐 & 인터뷰]", 
+        price: "30만 원", 
+        desc: "자료 기반 편집형\n10분 이내 가로형 영상 (16:9)\n보유 자료(B-roll), 인터뷰, 서비스 과정 정밀 편집" 
+      },
+      { 
+        label: "Type D. [리얼 후기 & 사례]", 
+        price: "30만 원", 
+        desc: "자료 기반 편집형\n인터뷰 소스 활용 및 비포/애프터 시각화\n핵심 성과 강조 자막 적용" 
+      }
+    ],
+    notes: [
+      "유료 스톡, 전용 촬영 소스 등 특수 소스 추가 시 비용 별도 협의"
     ]
   },
   { 
@@ -93,10 +162,26 @@ const items = [
     painPoint: "디지털에서의 세련된 이미지가 오프라인의 작은 제작물 하나로 인해 퇴색되고 있지는 않나요?\n작은 불일치가 브랜드의 전체적인 신뢰도를 떨어뜨릴 수 있습니다.",
     guideText: "BRAND ONE은 고객이 접하는 모든 물리적 매체에 일관된 브랜드 보이스를 입힙니다.\n온라인의 약속이 오프라인의 실물로 이어지는 매끄러운 경험을 통해, 고객의 신뢰를 마지막 순간까지 견고하게 지켜 드립니다.",
     prices: [
-      { label: "Item 1 (비즈니스 필수)", price: "1만 ~ 5만", desc: "명함(신규/수정), 봉투, 서식지 등 필수 사무 제작물" },
-      { label: "Item 2 (공간 비주얼)", price: "8만 ~ 10만", desc: "포스터, X배너, 입간판, 현수막, 공간 안내 사인" },
-      { label: "Item 3 (브랜드 가이드북)", price: "7만 ~ 28만", desc: "전단, 3단 리플렛, 브로슈어(P당), 서비스 매뉴얼" },
-      { label: "Item 4 (패키징 디렉팅)", price: "7만 ~ 100만", desc: "패키지 디자인, 박스, 라벨, 제품 안내카드 등" }
+      { 
+        label: "Item 1. [비즈니스 필수]", 
+        price: "1만 원 ~", 
+        desc: "명함(신규): 5만 원\n명함(수정): 1만 원\n봉투: 5만 원\n서식지: 5만 원" 
+      },
+      { 
+        label: "Item 2. [공간 비주얼]", 
+        price: "8만 원 ~", 
+        desc: "포스터: 8만 원\nX배너/입간판: 10만 원\n현수막: 10만 원 ~\n공간 안내 사인: 8만 원" 
+      },
+      { 
+        label: "Item 3. [브랜드 가이드 북]", 
+        price: "7만 원 ~", 
+        desc: "전단(단면): 8만 원\n전단(양면): 15만 원\n리플렛(2단/3단): 28만 원\n브로슈어(P당): 7만 원\n핵심 서비스 매뉴얼: 별도 협의" 
+      },
+      { 
+        label: "Item 4. [패키징 & 제품 디렉팅]", 
+        price: "1만 원 ~", 
+        desc: "패키지 디자인: 30만 원 ~\n박스/포장물: 30만 원\n선물세트 구성: 50만 원 ~\n라벨/스티커(신규): 7만 원\n라벨/스티커(단순 교체): 1만 원\n제품 안내카드(단면): 8만 원\n제품 안내카드(양면): 15만 원" 
+      }
     ]
   },
 ];
@@ -255,9 +340,147 @@ const ServiceCard = ({ item, size = "normal", onClick }: { item: typeof items[0]
 export default function Service() {
   const [selectedItem, setSelectedItem] = useState<typeof items[0] | null>(null);
   const [viewMode, setViewMode] = useState<"guide" | "price">("guide");
+  const [expandedPriceIdx, setExpandedPriceIdx] = useState<number | null>(null);
   const calculatorRef = useRef<HTMLDivElement>(null);
 
-  const [selectedOptions, setSelectedOptions] = useState<Record<string, number>>({});
+  const [currentStep, setCurrentStep] = useState(0);
+  const [selectedOptions, setSelectedOptions] = useState<Record<string, { price: number; quantity: number }>>({});
+  const [activeSubTab, setActiveSubTab] = useState<string | null>(null);
+  const [showScrollHint, setShowScrollHint] = useState(true);
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
+
+  const handleScroll = (e: any) => {
+    const { scrollTop, scrollHeight, clientHeight } = e.currentTarget;
+    const isAtBottom = scrollHeight - scrollTop <= clientHeight + 10;
+    setShowScrollHint(!isAtBottom);
+  };
+
+  const categories = [
+    {
+      id: "Strategy",
+      title: "전략 (Strategy)",
+      description: "비즈니스의 방향성을 설정하고 브랜드의 핵심 가치를 정의합니다.",
+      options: [
+        { id: "strategy-std", label: "Standard (베이직)", price: 500000 },
+        { id: "strategy-adv", label: "Advanced (비주얼)", price: 1000000 },
+        { id: "strategy-mst", label: "Master (프리미엄)", price: 2000000 },
+      ]
+    },
+    {
+      id: "Website",
+      title: "홈페이지 (Website)",
+      description: "브랜드의 디지털 거점을 구축하고 사용자 경험을 설계합니다.",
+      options: [
+        { id: "website-std", label: "Standard (베이직 웹)", price: 1500000 },
+        { id: "website-adv", label: "Advanced (비주얼 확장 웹)", price: 2500000 },
+        { id: "website-mst", label: "Master (프리미엄 커스텀)", price: 5000000 },
+        { id: "website-lp", label: "Point Service (페이지당)", price: 300000, hasQuantity: true },
+      ]
+    },
+    {
+      id: "Blog",
+      title: "블로그 (Blog)",
+      description: "지속적인 콘텐츠 발행을 통해 브랜드의 신뢰도와 전문성을 쌓습니다.",
+      options: [
+        { id: "blog-std", label: "Standard (월 4회)", price: 300000 },
+        { id: "blog-adv", label: "Advanced (월 8회)", price: 560000 },
+        { id: "blog-mst", label: "Master (전략 디렉팅)", price: 1000000 },
+      ]
+    },
+    {
+      id: "Place",
+      title: "플레이스 (Place)",
+      description: "오프라인 방문의 결정적 요충지인 네이버/구글 플레이스를 최적화합니다.",
+      options: [
+        { id: "place-mst", label: "Master (All-in-One)", price: 300000 },
+      ]
+    },
+    {
+      id: "Video",
+      title: "영상 (Video)",
+      description: "찰나의 순간에 브랜드의 실체를 생생하게 전달하는 영상 콘텐츠를 제작합니다.",
+      multiSelect: true,
+      options: [
+        { id: "video-a", label: "Type A. [숏폼 & 릴스]", price: 150000, hasQuantity: true },
+        { id: "video-b", label: "Type B. [숏폼 & 릴스]", price: 250000, hasQuantity: true },
+        { id: "video-c", label: "Type C. [브랜드 다큐 & 인터뷰]", price: 300000, hasQuantity: true },
+        { id: "video-d", label: "Type D. [리얼 후기 & 사례]", price: 300000, hasQuantity: true },
+      ]
+    },
+    {
+      id: "Offline",
+      title: "오프라인 (Offline)",
+      description: "손끝으로 전해지는 물리적 매체를 통해 브랜드 경험을 완성합니다.",
+      multiSelect: true,
+      subGroups: [
+        {
+          id: "essential",
+          title: "비즈니스 필수",
+          options: [
+            { id: "off-card-new", label: "명함(신규)", price: 50000, hasQuantity: true },
+            { id: "off-card-edit", label: "명함(수정)", price: 10000, hasQuantity: true },
+            { id: "off-env", label: "봉투", price: 50000, hasQuantity: true },
+            { id: "off-form", label: "서식지", price: 50000, hasQuantity: true },
+          ]
+        },
+        {
+          id: "visual",
+          title: "공간 비주얼",
+          options: [
+            { id: "off-poster", label: "포스터", price: 80000, hasQuantity: true },
+            { id: "off-banner-stand", label: "X배너/입간판", price: 100000, hasQuantity: true },
+            { id: "off-banner-long", label: "현수막", price: 100000, isStartingPrice: true, hasQuantity: true },
+            { id: "off-sign", label: "공간 안내 사인", price: 80000, hasQuantity: true },
+          ]
+        },
+        {
+          id: "guide",
+          title: "브랜드 가이드 북",
+          options: [
+            { id: "off-flyer-s", label: "전단(단면)", price: 80000, hasQuantity: true },
+            { id: "off-flyer-d", label: "전단(양면)", price: 150000, hasQuantity: true },
+            { id: "off-leaflet", label: "리플렛(2단/3단)", price: 280000, hasQuantity: true },
+            { id: "off-brochure", label: "브로슈어(P당)", price: 70000, hasQuantity: true },
+            { id: "off-manual", label: "핵심 서비스 매뉴얼", price: 0, isConsultation: true },
+          ]
+        },
+        {
+          id: "package",
+          title: "패키징 & 제품 디렉팅",
+          options: [
+            { id: "off-pkg-design", label: "패키지 디자인", price: 300000, isStartingPrice: true },
+            { id: "off-box", label: "박스/포장물", price: 300000, hasQuantity: true },
+            { id: "off-gift-set", label: "선물세트 구성", price: 500000, isStartingPrice: true },
+            { id: "off-sticker-new", label: "라벨/스티커(신규)", price: 70000, hasQuantity: true },
+            { id: "off-sticker-edit", label: "라벨/스티커(단순 교체)", price: 10000, hasQuantity: true },
+            { id: "off-card-s", label: "제품 안내카드(단면)", price: 80000, hasQuantity: true },
+            { id: "off-card-d", label: "제품 안내카드(양면)", price: 150000, hasQuantity: true },
+          ]
+        }
+      ]
+    }
+  ];
+
+  useEffect(() => {
+    const category = categories[currentStep];
+    if (category.subGroups) {
+      setActiveSubTab(category.subGroups[0].id);
+    } else {
+      setActiveSubTab(null);
+    }
+  }, [currentStep]);
+
+  useEffect(() => {
+    // Check if content is scrollable after a short delay for rendering
+    const timer = setTimeout(() => {
+      if (scrollContainerRef.current) {
+        const { scrollHeight, clientHeight } = scrollContainerRef.current;
+        setShowScrollHint(scrollHeight > clientHeight + 10);
+        scrollContainerRef.current.scrollTop = 0;
+      }
+    }, 150);
+    return () => clearTimeout(timer);
+  }, [currentStep, activeSubTab]);
 
   const scrollToCalculator = () => {
     calculatorRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -269,26 +492,45 @@ export default function Service() {
       if (next[optionId]) {
         delete next[optionId];
       } else {
-        // If it's a single-choice category (like Strategy, Website, Blog, Place), remove other options from same category
-        if (["Strategy", "Website", "Blog", "Place"].includes(categoryId)) {
+        const category = categories.find(c => c.id === categoryId);
+        if (category && !category.multiSelect) {
           const nextFiltered = { ...next };
           Object.keys(nextFiltered).forEach(key => {
-            if (key.startsWith(categoryId.toLowerCase())) delete nextFiltered[key];
+            // Check if existing selected option belongs to the same category
+            const allOptions: any[] = (category.subGroups 
+              ? (category.subGroups as any[]).flatMap(sg => sg.options)
+              : category.options || []) as any[];
+            const belongsToCategory = allOptions.some(opt => opt.id === key);
+            if (belongsToCategory) delete nextFiltered[key];
           });
-          nextFiltered[optionId] = price;
+          nextFiltered[optionId] = { price, quantity: 1 };
           return nextFiltered;
         }
-        next[optionId] = price;
+        next[optionId] = { price, quantity: 1 };
       }
       return next;
     });
   };
 
-  const totalPrice: number = (Object.values(selectedOptions) as number[]).reduce((sum: number, price: number) => sum + price, 0);
+  const handleQuantityChange = (optionId: string, delta: number) => {
+    setSelectedOptions(prev => {
+      if (!prev[optionId]) return prev;
+      const next = { ...prev };
+      const newQty = Math.max(1, next[optionId].quantity + delta);
+      next[optionId] = { ...next[optionId], quantity: newQty };
+      return next;
+    });
+  };
+
+  const totalPrice: number = (Object.values(selectedOptions) as { price: number; quantity: number }[]).reduce(
+    (sum: number, item: { price: number; quantity: number }) => sum + (item.price * item.quantity), 
+    0
+  );
 
   const handleClose = () => {
     setSelectedItem(null);
     setViewMode("guide");
+    setExpandedPriceIdx(null);
   };
 
   return (
@@ -357,12 +599,12 @@ export default function Service() {
 
           {/* Hexagon Vertices */}
           {[
-            { x: 500, y: 100, item: items[0] }, // Top
-            { x: 760, y: 250, item: items[1] }, // Top Right
-            { x: 760, y: 450, item: items[2] }, // Bottom Right
-            { x: 500, y: 600, item: items[3] }, // Bottom
-            { x: 240, y: 450, item: items[4] }, // Bottom Left
-            { x: 240, y: 250, item: items[5] }, // Top Left
+            { x: 500, y: 100, item: items[0] }, // Top: Strategy
+            { x: 760, y: 250, item: items[3] }, // Top Right: Place
+            { x: 760, y: 450, item: items[1] }, // Bottom Right: Website
+            { x: 500, y: 600, item: items[2] }, // Bottom: Blog
+            { x: 240, y: 450, item: items[4] }, // Bottom Left: Video
+            { x: 240, y: 250, item: items[5] }, // Top Left: Offline
           ].map((pt, idx) => (
             <div
               key={idx}
@@ -407,231 +649,362 @@ export default function Service() {
                 당신만의 <span className="text-brand-primary underline underline-offset-4 decoration-2">브랜드 빌드업</span>을 지금 시작해 보세요.
               </p>
 
-              <motion.button
-                onClick={scrollToCalculator}
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                className="group flex items-center gap-3 px-10 py-5 bg-slate-900 text-white rounded-full font-black text-lg hover:bg-brand-primary transition-all shadow-xl shadow-slate-200"
+              {/* Natural Flow Indicator */}
+              <motion.div
+                animate={{ y: [0, 15, 0] }}
+                transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
+                className="mt-16 flex flex-col items-center gap-6"
               >
-                견적 계산기 바로가기
-                <ArrowRight className="w-6 h-6 group-hover:translate-x-1 transition-transform" />
-              </motion.button>
+                <span className="text-sm font-black tracking-[0.3em] uppercase text-slate-400">
+                  Scroll to <span className="text-brand-primary">Build</span>
+                </span>
+                <div className="w-[2px] h-16 bg-gradient-to-b from-brand-primary/40 to-transparent rounded-full" />
+              </motion.div>
             </div>
           </div>
         </motion.section>
+      </div>
 
-        {/* Estimate Calculator Section */}
-        <section ref={calculatorRef} className="py-40 bg-slate-950 text-white overflow-hidden">
-          <div className="max-w-[1400px] mx-auto px-6">
-            <motion.div 
-              initial={{ opacity: 0, x: -20 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              className="flex items-center gap-4 mb-12"
-            >
-              <span className="text-sm font-bold tracking-widest text-brand-primary">02</span>
-              <div className="w-12 h-[1px] bg-brand-primary/30" />
-              <span className="text-sm font-bold tracking-widest text-slate-500 uppercase">ESTIMATE CALCULATOR</span>
-            </motion.div>
+      {/* Build Your Brand Section */}
+      <section id="estimate" ref={calculatorRef} className="py-32 bg-[#020617] text-white overflow-hidden w-full">
+        <div className="max-w-[1400px] mx-auto px-6">
+          <motion.div 
+            initial={{ opacity: 0, x: -20 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            className="flex items-center gap-4 mb-12"
+          >
+            <span className="text-sm font-bold tracking-widest text-[#D9F99D]">02</span>
+            <div className="w-12 h-[1px] bg-[#D9F99D]/30" />
+            <span className="text-sm font-bold tracking-widest text-slate-500 uppercase">BUILD YOUR BRAND</span>
+          </motion.div>
 
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-20 items-start">
-              {/* Left: Selection Area */}
-              <div className="space-y-12">
-                <h2 className="text-[40px] md:text-[56px] font-black tracking-tighter leading-tight">
-                  필요한 접점을 <br />
-                  <span className="text-brand-primary">자유롭게 구성해 보세요.</span>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
+            {/* Left: Step-by-Step Selection Area */}
+            <div className="space-y-10">
+              <div className="space-y-4">
+                <div className="flex items-center gap-4">
+                  <span className="text-[#D9F99D] font-black text-lg">STEP {currentStep + 1} / {categories.length}</span>
+                  <div className="flex-1 h-[2px] bg-white/10 rounded-full overflow-hidden">
+                    <motion.div 
+                      initial={{ width: 0 }}
+                      animate={{ width: `${((currentStep + 1) / categories.length) * 100}%` }}
+                      className="h-full bg-[#D9F99D] shadow-[0_0_15px_rgba(217,249,157,0.5)]"
+                    />
+                  </div>
+                </div>
+                <h2 className="text-[32px] md:text-[44px] font-black tracking-tighter leading-tight">
+                  {categories[currentStep].title} <br />
+                  <span className="text-[#D9F99D] text-[28px] md:text-[36px]">옵션을 선택해 주세요.</span>
                 </h2>
+                <p className="text-slate-500 font-bold text-sm md:text-base break-keep">
+                  {categories[currentStep].description}
+                </p>
+                {categories[currentStep].multiSelect && (
+                  <div className="inline-flex items-center gap-2 px-3 py-1 bg-white/5 rounded-full border border-white/10">
+                    <span className="w-1.5 h-1.5 rounded-full bg-[#D9F99D] animate-pulse" />
+                    <span className="text-[10px] font-black text-[#D9F99D] uppercase tracking-widest">중복 선택 가능</span>
+                  </div>
+                )}
+              </div>
 
-                <div className="space-y-10">
-                  {[
-                    {
-                      id: "Strategy",
-                      title: "전략 (Strategy)",
-                      options: [
-                        { id: "strategy-std", label: "Standard (기본 체계 정립)", price: 100000 },
-                        { id: "strategy-adv", label: "Advanced (비즈니스 설계)", price: 300000 },
-                        { id: "strategy-mst", label: "Master (통합 매니지먼트)", price: 500000 },
-                      ]
-                    },
-                    {
-                      id: "Website",
-                      title: "홈페이지 (Website)",
-                      options: [
-                        { id: "website-std", label: "Standard (베이직 웹)", price: 1500000 },
-                        { id: "website-adv", label: "Advanced (비주얼 확장 웹)", price: 2500000 },
-                        { id: "website-mst", label: "Master (프리미엄 커스텀)", price: 5000000 },
-                        { id: "website-lp", label: "Point Service (랜딩페이지)", price: 300000 },
-                      ]
-                    },
-                    {
-                      id: "Blog",
-                      title: "블로그 (Blog)",
-                      options: [
-                        { id: "blog-std", label: "Standard (월 4회)", price: 300000 },
-                        { id: "blog-adv", label: "Advanced (월 8회)", price: 560000 },
-                        { id: "blog-mst", label: "Master (전략 디렉팅)", price: 1000000 },
-                      ]
-                    },
-                    {
-                      id: "Place",
-                      title: "플레이스 (Place)",
-                      options: [
-                        { id: "place-mst", label: "Master (All-in-One)", price: 300000 },
-                      ]
-                    },
-                    {
-                      id: "Video",
-                      title: "영상 (Video)",
-                      options: [
-                        { id: "video-a", label: "Type A (숏폼 & 릴스)", price: 150000 },
-                        { id: "video-b", label: "Type B (브랜드 다큐)", price: 300000 },
-                        { id: "video-c", label: "Type C (리얼 후기 & 사례)", price: 300000 },
-                      ]
-                    },
-                    {
-                      id: "Offline",
-                      title: "오프라인 (Offline)",
-                      options: [
-                        { id: "offline-1", label: "Item 1 (비즈니스 필수)", price: 30000 },
-                        { id: "offline-2", label: "Item 2 (공간 비주얼)", price: 90000 },
-                        { id: "offline-3", label: "Item 3 (브랜드 가이드북)", price: 150000 },
-                        { id: "offline-4", label: "Item 4 (패키징 디렉팅)", price: 500000 },
-                      ]
-                    }
-                  ].map((cat) => (
-                    <div key={cat.id} className="space-y-4">
-                      <h3 className="text-lg font-bold text-slate-400 uppercase tracking-widest">{cat.title}</h3>
-                      <div className="flex flex-wrap gap-3">
-                        {cat.options.map((opt) => (
-                          <button
+              <div className="space-y-6 min-h-[400px] flex flex-col">
+                {categories[currentStep].subGroups && (
+                  <div className="flex items-center gap-2 overflow-x-auto pb-2 no-scrollbar">
+                    {categories[currentStep].subGroups.map((sg) => (
+                      <button
+                        key={sg.id}
+                        onClick={() => setActiveSubTab(sg.id)}
+                        className={`px-4 py-2 rounded-full text-xs font-black whitespace-nowrap transition-all border-2 ${
+                          activeSubTab === sg.id
+                            ? "bg-[#D9F99D] border-[#D9F99D] text-black"
+                            : "border-white/10 text-slate-500 hover:border-white/30 hover:text-white"
+                        }`}
+                      >
+                        {sg.title}
+                      </button>
+                    ))}
+                  </div>
+                )}
+
+                <div className="relative flex-1">
+                  <div 
+                    ref={scrollContainerRef}
+                    onScroll={handleScroll}
+                    className="absolute inset-0 overflow-y-auto pr-2 custom-scrollbar max-h-[320px]"
+                  >
+                    <AnimatePresence mode="wait">
+                      <motion.div
+                        key={`${currentStep}-${activeSubTab}`}
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -10 }}
+                        className="grid grid-cols-1 gap-3 pb-16"
+                      >
+                        {(categories[currentStep].subGroups 
+                          ? categories[currentStep].subGroups.find(sg => sg.id === activeSubTab)?.options 
+                          : categories[currentStep].options
+                        )?.map((opt) => (
+                          <div
                             key={opt.id}
-                            onClick={() => handleOptionToggle(cat.id, opt.id, opt.price)}
-                            className={`px-6 py-3 rounded-2xl border-2 transition-all font-bold text-sm ${
+                            className={`group p-5 rounded-2xl border-2 text-left transition-all relative overflow-hidden ${
                               selectedOptions[opt.id]
-                                ? "bg-brand-primary border-brand-primary text-white shadow-lg shadow-brand-primary/20"
-                                : "border-slate-800 text-slate-500 hover:border-slate-600 hover:text-slate-300"
+                                ? "bg-[#D9F99D] border-[#D9F99D] text-black shadow-[0_10px_30px_rgba(217,249,157,0.2)]"
+                                : "border-white/10 text-slate-400 hover:border-[#D9F99D]/40 hover:text-white hover:bg-white/5"
                             }`}
                           >
-                            {opt.label}
-                          </button>
+                            <div className="relative z-10 flex items-center justify-between">
+                              <button 
+                                onClick={() => handleOptionToggle(categories[currentStep].id, opt.id, opt.price)}
+                                className="flex-1 text-left"
+                              >
+                                <div className="space-y-0.5">
+                                  <span className="block text-base font-black tracking-tight">{opt.label}</span>
+                                  <span className={`text-xs font-bold ${selectedOptions[opt.id] ? "text-black/60" : "text-slate-500"}`}>
+                                    {(opt as any).isConsultation ? (
+                                      "별도 협의"
+                                    ) : (
+                                      <>
+                                        {(opt.price / 10000).toLocaleString()}만 원
+                                        {(opt as any).isStartingPrice && "~"}
+                                      </>
+                                    )}
+                                  </span>
+                                </div>
+                              </button>
+
+                              <div className="flex items-center gap-3">
+                                {selectedOptions[opt.id] && opt.hasQuantity && (
+                                  <div className="flex items-center gap-2 bg-black/10 rounded-full p-1 px-2">
+                                    <button 
+                                      onClick={() => handleQuantityChange(opt.id, -1)}
+                                      className="w-5 h-5 flex items-center justify-center hover:bg-black/20 rounded-full transition-colors"
+                                    >
+                                      <Minus className="w-3 h-3" />
+                                    </button>
+                                    <span className="text-xs font-black min-w-[12px] text-center">
+                                      {selectedOptions[opt.id].quantity}
+                                    </span>
+                                    <button 
+                                      onClick={() => handleQuantityChange(opt.id, 1)}
+                                      className="w-5 h-5 flex items-center justify-center hover:bg-black/20 rounded-full transition-colors"
+                                    >
+                                      <Plus className="w-3 h-3" />
+                                    </button>
+                                  </div>
+                                )}
+
+                                <button 
+                                  onClick={() => handleOptionToggle(categories[currentStep].id, opt.id, opt.price)}
+                                >
+                                  {selectedOptions[opt.id] ? (
+                                    <div className="w-7 h-7 bg-black rounded-full flex items-center justify-center text-[#D9F99D] shadow-lg">
+                                      <CheckCircle2 className="w-4 h-4" />
+                                    </div>
+                                  ) : (
+                                    <div className="w-7 h-7 border-2 border-white/10 rounded-full flex items-center justify-center group-hover:border-[#D9F99D]/50 group-hover:bg-[#D9F99D]/10 transition-all">
+                                      <Plus className="w-4 h-4 group-hover:text-[#D9F99D] transition-colors" />
+                                    </div>
+                                  )}
+                                </button>
+                              </div>
+                            </div>
+                          </div>
                         ))}
-                      </div>
-                    </div>
-                  ))}
+                      </motion.div>
+                    </AnimatePresence>
+                  </div>
+                  {/* Bottom Fade Mask */}
+                  <div className="absolute bottom-0 left-0 right-0 h-20 bg-gradient-to-t from-[#020617] via-[#020617]/80 to-transparent pointer-events-none z-20" />
+                  
+                  {/* Scroll Hint Indicator */}
+                  <AnimatePresence>
+                    {showScrollHint && categories[currentStep].id !== "Place" && (
+                      <motion.div 
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: 10 }}
+                        className="absolute bottom-4 left-1/2 -translate-x-1/2 z-30 flex flex-col items-center gap-1 pointer-events-none"
+                      >
+                        <span className="text-[10px] font-black text-[#D9F99D] uppercase tracking-widest opacity-60">More Options</span>
+                        <motion.div
+                          animate={{ y: [0, -4, 0] }}
+                          transition={{ duration: 1.5, repeat: Infinity }}
+                        >
+                          <ArrowRight className="w-3 h-3 text-[#D9F99D] -rotate-90 opacity-60" />
+                        </motion.div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
                 </div>
               </div>
 
-              {/* Right: Summary Area */}
-              <div className="sticky top-32">
-                <div className="bg-slate-900 rounded-[48px] p-10 md:p-14 border border-slate-800 shadow-2xl">
-                  <div className="flex items-center justify-between mb-12">
-                    <div className="flex items-center gap-3">
-                      <div className="w-12 h-12 bg-brand-primary/10 rounded-2xl flex items-center justify-center text-brand-primary">
-                        <Calculator className="w-6 h-6" />
-                      </div>
-                      <h3 className="text-2xl font-black tracking-tight">예상 견적 요약</h3>
+              <div className="flex items-center gap-3 pt-6">
+                <button
+                  disabled={currentStep === 0}
+                  onClick={() => setCurrentStep(prev => prev - 1)}
+                  className={`px-8 py-4 rounded-full font-black text-base transition-all border-2 ${
+                    currentStep === 0 
+                      ? "border-white/5 text-white/5 cursor-not-allowed" 
+                      : "border-white/20 text-white/60 hover:border-[#D9F99D] hover:text-[#D9F99D]"
+                  }`}
+                >
+                  이전 단계
+                </button>
+                <button
+                  onClick={() => {
+                    if (currentStep < categories.length - 1) {
+                      setCurrentStep(prev => prev + 1);
+                    }
+                  }}
+                  className={`flex-1 py-4 rounded-full font-black text-base transition-all ${
+                    currentStep === categories.length - 1
+                      ? "bg-white/5 text-white/20 cursor-not-allowed border border-white/5"
+                      : "bg-white text-black hover:bg-[#D9F99D] hover:text-black hover:shadow-[0_10px_30px_rgba(217,249,157,0.3)]"
+                  }`}
+                >
+                  {currentStep === categories.length - 1 ? "마지막 단계입니다" : "다음 단계로"}
+                </button>
+              </div>
+            </div>
+
+            {/* Right: Summary Area */}
+            <div className="sticky top-32">
+              <div className="bg-white/5 rounded-[40px] p-8 md:p-10 border border-white/10 shadow-2xl backdrop-blur-xl relative overflow-hidden">
+                {/* Decorative Background Glow */}
+                <div className="absolute -top-24 -right-24 w-64 h-64 bg-[#6366F1]/10 blur-[100px] pointer-events-none" />
+                
+                <div className="flex items-center justify-between mb-10 relative z-10">
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 bg-[#6366F1]/10 rounded-xl flex items-center justify-center text-[#6366F1]">
+                      <Calculator className="w-5 h-5" />
                     </div>
-                    <button 
-                      onClick={() => setSelectedOptions({})}
-                      className="text-slate-500 hover:text-white transition-colors flex items-center gap-2 font-bold text-sm"
-                    >
-                      <RotateCcw className="w-4 h-4" />
-                      초기화
-                    </button>
+                    <h3 className="text-xl font-black tracking-tight">Brand Build-up Architect</h3>
                   </div>
+                  <button 
+                    onClick={() => {
+                      setSelectedOptions({});
+                      setCurrentStep(0);
+                    }}
+                    className="text-slate-500 hover:text-white transition-colors flex items-center gap-2 font-bold text-xs"
+                  >
+                    <RotateCcw className="w-3.5 h-3.5" />
+                    초기화
+                  </button>
+                </div>
 
-                  <div className="space-y-6 mb-12 min-h-[200px]">
-                    <AnimatePresence mode="popLayout">
-                      {Object.keys(selectedOptions).length > 0 ? (
-                        Object.entries(selectedOptions).map(([id, price]: [string, number]) => {
-                          // Find label from id
-                          const allOptions = [
-                            { id: "strategy-std", label: "전략 - Standard" },
-                            { id: "strategy-adv", label: "전략 - Advanced" },
-                            { id: "strategy-mst", label: "전략 - Master" },
-                            { id: "website-std", label: "홈페이지 - Standard" },
-                            { id: "website-adv", label: "홈페이지 - Advanced" },
-                            { id: "website-mst", label: "홈페이지 - Master" },
-                            { id: "website-lp", label: "홈페이지 - 랜딩페이지" },
-                            { id: "blog-std", label: "블로그 - Standard" },
-                            { id: "blog-adv", label: "블로그 - Advanced" },
-                            { id: "blog-mst", label: "블로그 - Master" },
-                            { id: "place-mst", label: "플레이스 - Master" },
-                            { id: "video-a", label: "영상 - Type A" },
-                            { id: "video-b", label: "영상 - Type B" },
-                            { id: "video-c", label: "영상 - Type C" },
-                            { id: "offline-1", label: "오프라인 - Item 1" },
-                            { id: "offline-2", label: "오프라인 - Item 2" },
-                            { id: "offline-3", label: "오프라인 - Item 3" },
-                            { id: "offline-4", label: "오프라인 - Item 4" },
-                          ];
-                          const label = allOptions.find(o => o.id === id)?.label || id;
-                          
-                          return (
-                            <motion.div
-                              key={id}
-                              initial={{ opacity: 0, x: -10 }}
-                              animate={{ opacity: 1, x: 0 }}
-                              exit={{ opacity: 0, scale: 0.95 }}
-                              className="flex items-center justify-between group"
-                            >
-                              <span className="text-slate-400 font-bold">{label}</span>
-                              <div className="flex items-center gap-4">
-                                <span className="font-black text-white">{(price / 10000).toLocaleString()}만 원</span>
-                                <button 
-                                  onClick={() => {
-                                    const next = { ...selectedOptions };
-                                    delete next[id];
-                                    setSelectedOptions(next);
-                                  }}
-                                  className="text-slate-700 hover:text-rose-500 transition-colors"
-                                >
-                                  <Minus className="w-4 h-4" />
-                                </button>
-                              </div>
-                            </motion.div>
-                          );
-                        })
-                      ) : (
-                        <div className="h-full flex flex-col items-center justify-center text-slate-600 gap-4 py-10">
-                          <Plus className="w-8 h-8 opacity-20" />
-                          <p className="font-bold">선택된 항목이 없습니다.</p>
-                        </div>
-                      )}
-                    </AnimatePresence>
-                  </div>
+                <div className="space-y-4 mb-10 min-h-[180px] relative z-10">
+                  <AnimatePresence mode="popLayout">
+                    {Object.keys(selectedOptions).length > 0 ? (
+                      Object.entries(selectedOptions).map(([id, item]: [string, any]) => {
+                        // Find label and special flags from id across all categories
+                        let label = id;
+                        let isStartingPrice = false;
+                        let isConsultation = false;
 
-                  <div className="pt-10 border-t border-slate-800">
-                    <div className="flex items-end justify-between mb-10">
-                      <span className="text-slate-400 font-bold text-lg">총 예상 견적</span>
-                      <div className="text-right">
-                        <motion.span 
-                          key={totalPrice}
-                          initial={{ opacity: 0, y: 10 }}
-                          animate={{ opacity: 1, y: 0 }}
-                          className="text-[48px] md:text-[56px] font-black text-brand-primary leading-none block"
-                        >
-                          {(totalPrice / 10000).toLocaleString()}만 원
-                        </motion.span>
-                        <span className="text-slate-500 text-sm font-bold mt-2 block">VAT 별도</span>
+                        categories.forEach((cat: any) => {
+                          const allOpts: any[] = (cat.subGroups 
+                            ? (cat.subGroups as any[]).flatMap(sg => sg.options)
+                            : cat.options || []) as any[];
+                          const opt = allOpts.find(o => o.id === id);
+                          if (opt) {
+                            label = `${cat.title.split(' ')[0]} - ${opt.label.split(' ')[0]}`;
+                            isStartingPrice = opt.isStartingPrice || false;
+                            isConsultation = opt.isConsultation || false;
+                          }
+                        });
+                        
+                        return (
+                          <motion.div
+                            key={id}
+                            initial={{ opacity: 0, x: -10 }}
+                            animate={{ opacity: 1, x: 0 }}
+                            exit={{ opacity: 0, scale: 0.95 }}
+                            className="flex items-center justify-between group"
+                          >
+                            <div className="flex flex-col">
+                              <span className="text-slate-400 font-bold text-sm">{label}</span>
+                              {item.quantity > 1 && (
+                                <span className="text-[10px] text-slate-600 font-bold">수량: {item.quantity}개</span>
+                              )}
+                            </div>
+                            <div className="flex items-center gap-3">
+                              <span className="font-black text-white text-sm">
+                                {isConsultation ? (
+                                  "별도 협의"
+                                ) : (
+                                  <>
+                                    {((item.price * item.quantity) / 10000).toLocaleString()}만 원
+                                    {isStartingPrice && "~"}
+                                  </>
+                                )}
+                              </span>
+                              <button 
+                                onClick={() => {
+                                  const next = { ...selectedOptions };
+                                  delete next[id];
+                                  setSelectedOptions(next);
+                                }}
+                                className="text-slate-700 hover:text-rose-500 transition-colors"
+                              >
+                                <Minus className="w-3.5 h-3.5" />
+                              </button>
+                            </div>
+                          </motion.div>
+                        );
+                      })
+                    ) : (
+                      <div className="h-full flex flex-col items-center justify-center text-slate-700 gap-3 py-8">
+                        <Plus className="w-6 h-6 opacity-20" />
+                        <p className="font-bold text-sm">선택된 항목이 없습니다.</p>
                       </div>
-                    </div>
+                    )}
+                  </AnimatePresence>
+                </div>
 
-                    <button className="w-full py-6 bg-brand-primary text-white rounded-3xl font-black text-xl hover:shadow-2xl hover:shadow-brand-primary/30 transition-all flex items-center justify-center gap-3">
-                      상담 신청하고 확정 견적 받기
-                      <ArrowRight className="w-6 h-6" />
-                    </button>
-                    <p className="text-center text-slate-600 text-sm font-medium mt-6">
-                      * 위 견적은 선택하신 항목에 따른 예상 비용이며, <br />
-                      상담을 통해 상세 범위 확정 시 변동될 수 있습니다.
-                    </p>
+                <div className="pt-8 border-t border-white/10 relative z-10">
+                  <div className="flex items-end justify-between mb-8">
+                    <span className="text-slate-400 font-bold text-base">총 예상 견적</span>
+                    <div className="text-right">
+                      <motion.span 
+                        key={totalPrice}
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        className="text-[36px] md:text-[44px] font-black text-[#D9F99D] leading-none block drop-shadow-[0_0_15px_rgba(217,249,157,0.3)]"
+                      >
+                        {(totalPrice / 10000).toLocaleString()}만 원
+                        {Object.keys(selectedOptions).some(id => {
+                          let isStarting = false;
+                          categories.forEach((cat: any) => {
+                            const allOpts: any[] = (cat.subGroups 
+                              ? (cat.subGroups as any[]).flatMap(sg => sg.options)
+                              : cat.options || []) as any[];
+                            const opt = allOpts.find(o => o.id === id);
+                            if (opt && opt.isStartingPrice) isStarting = true;
+                          });
+                          return isStarting;
+                        }) && "~"}
+                      </motion.span>
+                      <span className="text-slate-500 text-xs font-bold mt-1.5 block">VAT 별도</span>
+                    </div>
                   </div>
+
+                  <button className="w-full py-5 bg-[#6366F1] text-white rounded-2xl font-black text-lg hover:shadow-[0_15px_40px_rgba(99,102,241,0.4)] transition-all flex items-center justify-center gap-2 active:scale-[0.98]">
+                    상담 신청하고 확정 견적 받기
+                    <ArrowRight className="w-5 h-5" />
+                  </button>
+                  <p className="text-center text-slate-600 text-xs font-medium mt-5">
+                    * 위 견적은 선택하신 항목에 따른 예상 비용이며, <br />
+                    상담을 통해 상세 범위 확정 시 변동될 수 있습니다.
+                  </p>
                 </div>
               </div>
             </div>
           </div>
-        </section>
-      </div>
+        </div>
+      </section>
+
+      <Footer className="bg-[#020617]" />
 
       {/* Interactive Overlay */}
       <AnimatePresence>
@@ -646,134 +1019,187 @@ export default function Service() {
               initial={{ scale: 0.9, opacity: 0, y: 20 }}
               animate={{ scale: 1, opacity: 1, y: 0 }}
               exit={{ scale: 0.9, opacity: 0, y: 20 }}
-              className="bg-white w-full max-w-2xl rounded-[40px] overflow-hidden shadow-2xl relative"
+              className="bg-white w-full max-w-2xl max-h-[90vh] rounded-[40px] overflow-hidden shadow-2xl relative flex flex-col"
             >
-              {/* Close Button */}
-              <button 
-                onClick={handleClose}
-                className="absolute top-8 right-8 w-12 h-12 rounded-full bg-slate-50 flex items-center justify-center text-slate-400 hover:text-slate-900 hover:bg-slate-100 transition-all z-10"
-              >
-                <X size={24} />
-              </button>
+              {/* Sticky Header */}
+              <div className="p-8 md:p-12 pb-6 shrink-0 relative border-b border-slate-50">
+                <button 
+                  onClick={handleClose}
+                  className="absolute top-8 right-8 w-12 h-12 rounded-full bg-slate-50 flex items-center justify-center text-slate-400 hover:text-slate-900 hover:bg-slate-100 transition-all z-10"
+                >
+                  <X size={24} />
+                </button>
 
-              <div className="p-10 md:p-14">
-                {/* Header */}
-                <div className="mb-10">
-                  <div className={`inline-flex items-center px-4 py-1.5 rounded-full ${selectedItem.accentBg} text-white text-xs font-black uppercase tracking-widest mb-4`}>
-                    {selectedItem.name}
+                <div className={`inline-flex items-center px-4 py-1.5 rounded-full ${selectedItem.accentBg} text-white text-xs font-black uppercase tracking-widest mb-4`}>
+                  {selectedItem.name}
+                </div>
+                {viewMode === "guide" ? (
+                  <div className="flex gap-6">
+                    <div className={`w-1.5 rounded-full ${selectedItem.accentBg} shrink-0`} />
+                    <div className="space-y-2">
+                      <div className="relative inline-block">
+                        <h3 className="text-2xl md:text-3xl font-black text-slate-900 tracking-tight leading-tight relative z-10">
+                          {selectedItem.title}
+                        </h3>
+                        <div className={`absolute bottom-0.5 left-0 w-full h-3.5 ${selectedItem.accentBg} opacity-40 z-0`} />
+                      </div>
+                      <p className="text-xl md:text-2xl font-black text-slate-900 tracking-tight leading-tight break-keep">
+                        {selectedItem.subTitle}
+                      </p>
+                    </div>
                   </div>
-                  {viewMode === "guide" ? (
-                    <div className="flex gap-6">
-                      {/* Vertical Accent Bar */}
-                      <div className={`w-1.5 rounded-full ${selectedItem.accentBg} shrink-0`} />
-                      
-                      <div className="space-y-2">
-                        <div className="relative inline-block">
-                          <h3 className="text-2xl md:text-3xl font-black text-slate-900 tracking-tight leading-tight relative z-10">
-                            {selectedItem.title}
-                          </h3>
-                          {/* Highlighter Underline */}
-                          <div className={`absolute bottom-0.5 left-0 w-full h-3.5 ${selectedItem.accentBg} opacity-40 z-0`} />
+                ) : (
+                  <h3 className="text-2xl md:text-3xl font-black text-slate-900 tracking-tight leading-tight">
+                    Service Price List
+                  </h3>
+                )}
+              </div>
+
+              {/* Scrollable Content Area */}
+              <div className="flex-1 overflow-y-auto p-8 md:p-12 pt-8 custom-scrollbar">
+                {viewMode === "guide" ? (
+                  <motion.div
+                    key="guide"
+                    initial={{ opacity: 0, x: 20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    exit={{ opacity: 0, x: -20 }}
+                  >
+                    <div className="mb-10">
+                      <p className="text-xl md:text-2xl font-black text-brand-primary italic leading-tight mb-6 break-keep whitespace-pre-line">
+                        "{selectedItem.quote}"
+                      </p>
+                      <div className="space-y-6">
+                        <div>
+                          <span className="text-xs font-black uppercase tracking-widest text-rose-500 mb-2 block">Pain Point</span>
+                          <p className="text-slate-600 font-bold leading-relaxed break-keep whitespace-pre-line">{selectedItem.painPoint}</p>
                         </div>
-                        <p className="text-xl md:text-2xl font-black text-slate-900 tracking-tight leading-tight break-keep">
-                          {selectedItem.subTitle}
-                        </p>
+                        <div>
+                          <span className="text-xs font-black uppercase tracking-widest text-emerald-500 mb-2 block">Guide / Solution</span>
+                          <p className="text-slate-600 font-bold leading-relaxed break-keep whitespace-pre-line">{selectedItem.guideText}</p>
+                        </div>
                       </div>
                     </div>
-                  ) : (
-                    <h3 className="text-2xl md:text-3xl font-black text-slate-900 tracking-tight leading-tight">
-                      Service Price List
-                    </h3>
-                  )}
-                </div>
-
-                {/* Content Area */}
-                <div className="min-h-[400px]">
-                  {viewMode === "guide" ? (
-                    <motion.div
-                      key="guide"
-                      initial={{ opacity: 0, x: 20 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      exit={{ opacity: 0, x: -20 }}
-                    >
-                      <div className="mb-10">
-                        <p className="text-xl md:text-2xl font-black text-brand-primary italic leading-tight mb-6 break-keep whitespace-pre-line">
-                          "{selectedItem.quote}"
-                        </p>
-                        <div className="space-y-6">
-                          <div>
-                            <span className="text-xs font-black uppercase tracking-widest text-rose-500 mb-2 block">Pain Point</span>
-                            <p className="text-slate-600 font-bold leading-relaxed break-keep whitespace-pre-line">{selectedItem.painPoint}</p>
+                  </motion.div>
+                ) : (
+                  <motion.div
+                    key="price"
+                    initial={{ opacity: 0, x: 20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    exit={{ opacity: 0, x: -20 }}
+                    className="space-y-4"
+                  >
+                    {selectedItem.prices.map((p, idx) => {
+                      const isExpanded = expandedPriceIdx === idx;
+                      return (
+                        <div 
+                          key={idx} 
+                          className={`flex flex-col p-6 border-2 transition-all duration-300 rounded-3xl cursor-pointer ${
+                            isExpanded 
+                              ? `border-brand-primary/40 bg-slate-50/50` 
+                              : "border-slate-50 hover:border-brand-primary/20"
+                          }`}
+                          onClick={() => setExpandedPriceIdx(isExpanded ? null : idx)}
+                        >
+                          <div className="flex items-center justify-between gap-4">
+                            <div className="flex-1">
+                              <h4 className="text-lg font-black text-slate-900">{p.label}</h4>
+                            </div>
+                            <div className="flex items-center gap-4">
+                              <span className={`text-xl md:text-2xl font-black ${selectedItem.color}`}>{p.price}</span>
+                              <motion.div
+                                animate={{ rotate: isExpanded ? 180 : 0 }}
+                                className="text-slate-400"
+                              >
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+                                  <path d="M6 9l6 6 6-6" />
+                                </svg>
+                              </motion.div>
+                            </div>
                           </div>
-                          <div>
-                            <span className="text-xs font-black uppercase tracking-widest text-emerald-500 mb-2 block">Guide / Solution</span>
-                            <p className="text-slate-600 font-bold leading-relaxed break-keep whitespace-pre-line">{selectedItem.guideText}</p>
-                          </div>
+                          
+                          <AnimatePresence>
+                            {isExpanded && (
+                              <motion.div
+                                initial={{ height: 0, opacity: 0, marginTop: 0 }}
+                                animate={{ height: "auto", opacity: 1, marginTop: 16 }}
+                                exit={{ height: 0, opacity: 0, marginTop: 0 }}
+                                className="overflow-hidden"
+                              >
+                                <div className="space-y-2 pt-2 border-t border-slate-200/60">
+                                  {p.desc.split('\n').map((line, i) => (
+                                    <div key={i} className="flex gap-2 text-sm font-bold text-slate-500 leading-relaxed">
+                                      <span className={`shrink-0 ${selectedItem.color} opacity-60`}>•</span>
+                                      <span className="break-keep">{line}</span>
+                                    </div>
+                                  ))}
+                                </div>
+                              </motion.div>
+                            )}
+                          </AnimatePresence>
                         </div>
-                      </div>
-                    </motion.div>
-                  ) : (
-                    <motion.div
-                      key="price"
-                      initial={{ opacity: 0, x: 20 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      exit={{ opacity: 0, x: -20 }}
-                      className="space-y-4"
-                    >
-                      {selectedItem.prices.map((p, idx) => (
-                        <div key={idx} className="flex flex-col md:flex-row md:items-center justify-between p-6 border-2 border-slate-50 rounded-3xl hover:border-brand-primary/20 transition-colors gap-4">
-                          <div className="flex-1">
-                            <h4 className="text-lg font-black text-slate-900 mb-1">{p.label}</h4>
-                            <p className="text-sm font-bold text-slate-500">{p.desc}</p>
-                          </div>
-                          <div className="text-right">
-                            <span className={`text-2xl font-black ${selectedItem.color}`}>{p.price}</span>
-                          </div>
-                        </div>
-                      ))}
-                      <div className="p-6 bg-slate-50 rounded-3xl mt-6">
-                        <p className="text-sm text-slate-500 font-medium leading-relaxed">
+                      );
+                    })}
+                    <div className="p-6 bg-slate-50 rounded-3xl mt-6">
+                      <div className="space-y-1.5">
+                        {(selectedItem as any).notes?.map((note: string, i: number) => (
+                          <p key={i} className="text-sm text-slate-500 font-bold leading-relaxed flex gap-2">
+                            <span className="shrink-0 opacity-60">※</span>
+                            <span>{note}</span>
+                          </p>
+                        ))}
+                        <p className="text-sm text-slate-400 font-medium leading-relaxed mt-2 pt-2 border-t border-slate-200/60">
                           * 위 가격은 프로젝트의 규모와 난이도에 따라 변동될 수 있습니다. <br />
                           * 상세 견적은 상담을 통해 확정됩니다.
                         </p>
                       </div>
-                    </motion.div>
-                  )}
-                </div>
+                    </div>
+                  </motion.div>
+                )}
+              </div>
 
-                {/* Footer Action */}
-                <div className="mt-12 pt-8 border-t border-slate-100 flex justify-between items-center">
-                  {viewMode === "guide" ? (
-                    <>
-                      <div className="flex items-center gap-2 text-slate-400 font-bold text-sm">
-                        <span className="w-2 h-2 rounded-full bg-brand-primary" />
-                        Guide View
-                      </div>
+              {/* Sticky Footer Action */}
+              <div className="p-8 md:p-12 pt-6 shrink-0 border-t border-slate-100 bg-white flex justify-between items-center">
+                {viewMode === "guide" ? (
+                  <>
+                    <div className="flex items-center gap-2 text-slate-400 font-bold text-sm">
+                      <span className="w-2 h-2 rounded-full bg-brand-primary" />
+                      Guide View
+                    </div>
+                    <button 
+                      onClick={() => setViewMode("price")}
+                      className="flex items-center gap-2 px-8 py-4 bg-slate-900 text-white rounded-full font-black hover:bg-brand-primary transition-all group"
+                    >
+                      가격 리스트 확인하기
+                      <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                    </button>
+                  </>
+                ) : (
+                  <>
+                    <button 
+                      onClick={() => setViewMode("guide")}
+                      className="text-slate-400 font-black hover:text-slate-900 transition-colors"
+                    >
+                      ← 가이드 다시보기
+                    </button>
+                    <div className="flex items-center gap-3">
                       <button 
-                        onClick={() => setViewMode("price")}
-                        className="flex items-center gap-2 px-8 py-4 bg-slate-900 text-white rounded-full font-black hover:bg-brand-primary transition-all group"
+                        onClick={() => {
+                          handleClose();
+                          scrollToCalculator();
+                        }}
+                        className="px-8 py-4 bg-[#D9F99D] text-slate-900 rounded-full font-black hover:shadow-lg hover:shadow-[#D9F99D]/30 transition-all"
                       >
-                        가격 리스트 확인하기
-                        <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-                      </button>
-                    </>
-                  ) : (
-                    <>
-                      <button 
-                        onClick={() => setViewMode("guide")}
-                        className="text-slate-400 font-black hover:text-slate-900 transition-colors"
-                      >
-                        ← 가이드 다시보기
+                        가상 견적
                       </button>
                       <button 
                         onClick={handleClose}
                         className="px-8 py-4 bg-brand-primary text-white rounded-full font-black hover:shadow-lg hover:shadow-brand-primary/30 transition-all"
                       >
-                        상담 신청하기
+                        상담 신청
                       </button>
-                    </>
-                  )}
-                </div>
+                    </div>
+                  </>
+                )}
               </div>
             </motion.div>
           </motion.div>

@@ -5,7 +5,7 @@ import Service from "./pages/Service";
 
 export default function App() {
   return (
-    <Router>
+    <Router basename="/BRAND-ONE-upgrade"> 
       <div className="min-h-screen bg-white">
         <Navbar />
         <Routes>

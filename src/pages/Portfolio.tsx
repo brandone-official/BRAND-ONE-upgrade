@@ -255,7 +255,7 @@ export default function Portfolio() {
       id: "place-audit-01",
       title: "들마루정육점일산점",
       url: "https://naver.me/GyYnF1L3",
-      image: "/assets/image/place_1.png?v=2",
+      image: "assets/image/place_1.png?v=2",
       hotspots: [],
       scores: [
         { label: "비즈니스 영역 집중도", score: 0, status: "low" },
@@ -275,7 +275,7 @@ export default function Portfolio() {
       id: "place-audit-02",
       title: "경희아소한의원",
       url: "https://naver.me/xiq9XiNo",
-      image: "/assets/image/place_2.png?v=2",
+      image: "assets/image/place_2.png?v=2",
       hotspots: [],
       scores: [
         { label: "비즈니스 영역 집중도", score: 30, status: "low" },
@@ -295,7 +295,7 @@ export default function Portfolio() {
       id: "place-audit-03",
       title: "전주W한의원",
       url: "https://naver.me/xOx1uuQA",
-      image: "/assets/image/place_3.png?v=2",
+      image: "assets/image/place_3.png?v=2",
       hotspots: [],
       scores: [
         { label: "비즈니스 영역 집중도", score: 90, status: "high" },
@@ -322,7 +322,7 @@ export default function Portfolio() {
       price: "150만원",
       score: 98,
       url: "https://brandone-official.github.io/BRAND-ONE/",
-      image: "/assets/image/website_1.png?v=2"
+      image: "assets/image/website_1.png?v=2"
     },
     {
       id: "web-02",
@@ -332,7 +332,7 @@ export default function Portfolio() {
       price: "200만원",
       score: 96,
       url: "https://resetclinic.kr",
-      image: "/assets/image/website_2.png?v=2"
+      image: "assets/image/website_2.png?v=2"
     }
   ];
 
@@ -344,7 +344,7 @@ export default function Portfolio() {
       desc: "진정성과 실용적인 스토리텔링으로 마음을 움직이는 콘텐츠",
       tags: ["페르소나 설정", "SEO/AEO 최적화", "고관여 타겟팅"],
       url: "https://blog.naver.com/w-hani/224236745252",
-      image: "/assets/image/blog_1.png?v=2"
+      image: "assets/image/blog_1.png?v=2"
     },
     {
       id: "blog-02",
@@ -353,7 +353,7 @@ export default function Portfolio() {
       desc: "실제 치료 사례와 전문 지식을 쉽게 풀어내는 전략",
       tags: ["페르소나 설정", "SEO/AEO 최적화", "저관여 작업"],
       url: "http://asohani.tistory.com/1",
-      image: "/assets/image/blog_2.png?v=2"
+      image: "assets/image/blog_2.png?v=2"
     },
     {
       id: "blog-03",
@@ -362,7 +362,7 @@ export default function Portfolio() {
       desc: "커뮤니티 특성에 맞춘 소통형 콘텐츠와 신뢰 구축",
       tags: ["커뮤니티 마케팅", "소통", "잠재적 고객 확보"],
       url: "https://cafe.naver.com/forhani/294",
-      image: "/assets/image/blog_3.png?v=2"
+      image: "assets/image/blog_3.png?v=2"
     }
   ];
 
@@ -373,7 +373,7 @@ export default function Portfolio() {
       title: "10년 째 낫지 않는 만성 통증, 원인이 음식에 있을 수 있습니다.",
       desc: "브랜드의 핵심 가치와 철학을 담은 고감도 브랜드 필름",
       url: "https://youtu.be/fDdywvP6zqU",
-      thumbnail: "/assets/image/video_1.png?v=2",
+      thumbnail: "assets/image/video_1.png?v=2",
       insight: "영상은 이제 정보 가치를 결정하는 가장 강력한 도구입니다.\n메시지가 흐려지지 않도록 본질을 뚫는 전략 기획이 선행되어야 합니다.\n화려함보다 탄탄한 기획으로 브랜드의 가치를 증명하십시오."
     },
     {
@@ -382,7 +382,7 @@ export default function Portfolio() {
       title: "[리셋바디] 김OO님 인터뷰",
       desc: "실제 고객의 생생한 목소리를 담은 인터뷰 콘텐츠",
       url: "https://youtu.be/pBJWjlAWr2I?si=bTGEQ3h6TpY4qskr",
-      thumbnail: "/assets/image/video_4.png?v=2",
+      thumbnail: "assets/image/video_4.png?v=2",
       insight: "정보는 영상으로 흐르고 대중은 진정성에 반응합니다.\n우리만의 목소리를 내려면 복잡함을 덜고 본질에 집중해야 합니다.\n일관성 있는 이야기의 힘이 브랜드의 차별점을 만듭니다."
     },
     {
@@ -391,7 +391,7 @@ export default function Portfolio() {
       title: "약 끊을 수 없나요?",
       desc: "인스타그램 릴스 최적화 포맷의 고효율 광고 콘텐츠",
       url: "https://youtube.com/shorts/U7XgEtrHnsM?feature=share",
-      thumbnail: "/assets/image/video_2.png?v=2",
+      thumbnail: "assets/image/video_2.png?v=2",
       insight: "정보는 영상으로 흐르고 대중은 진정성에 반응합니다.\n우리만의 목소리를 내려면 복잡함을 덜고 본질에 집중해야 합니다.\n일관성 있는 이야기의 힘이 브랜드의 차별점을 만듭니다."
     },
     {
@@ -400,7 +400,7 @@ export default function Portfolio() {
       title: "삼치 토마토 콩피",
       desc: "제품의 특장점을 감각적인 영상미로 풀어낸 스토리텔링 콘텐츠",
       url: "https://www.instagram.com/reel/DSbuqZZALOv/?igsh=MW1sdjI3MWgya2hvcw==",
-      thumbnail: "/assets/image/video_3.png?v=2",
+      thumbnail: "assets/image/video_3.png?v=2",
       insight: "정보는 영상으로 흐르고 대중은 진정성에 반응합니다.\n우리만의 목소리를 내려면 복잡함을 덜고 본질에 집중해야 합니다.\n일관성 있는 이야기의 힘이 브랜드의 차별점을 만듭니다."
     }
   ];
@@ -414,12 +414,12 @@ export default function Portfolio() {
       count: 6,
       desc: "첫인상을 완성하는 감도 높은 고품격 명함 디자인",
       images: [
-        "/assets/image/name_1.png?v=3",
-        "/assets/image/name_2.png?v=3",
-        "/assets/image/name_3.png?v=3",
-        "/assets/image/name_4.png?v=3",
-        "/assets/image/name_5.png?v=3",
-        "/assets/image/name_6.png?v=3"
+        "assets/image/name_1.png?v=3",
+        "assets/image/name_2.png?v=3",
+        "assets/image/name_3.png?v=3",
+        "assets/image/name_4.png?v=3",
+        "assets/image/name_5.png?v=3",
+        "assets/image/name_6.png?v=3"
       ],
       insight: "단순한 정보를 넘어 브랜드의 격을 전달합니다.\n정교한 타이포그래피와 여백의 조화로 비즈니스 신뢰를 구축합니다."
     },
@@ -431,9 +431,9 @@ export default function Portfolio() {
       count: 3,
       desc: "브랜드의 무드를 완성하는 몰입형 디자인",
       images: [
-        "/assets/image/poster_1.png?v=2",
-        "/assets/image/poster_2.png?v=2",
-        "/assets/image/poster_3.png?v=2"
+        "assets/image/poster_1.png?v=2",
+        "assets/image/poster_2.png?v=2",
+        "assets/image/poster_3.png?v=2"
       ],
       insight: "강력한 문구와 비주얼의 결합으로 찰나의 시선을 장악합니다.\n멀리서도 브랜드가 돋보이도록 압도적인 레이아웃을 설계합니다."
     },
@@ -445,8 +445,8 @@ export default function Portfolio() {
       count: 2,
       desc: "핵심 정보를 직관적으로 전달하는 최적화 배너 디자인",
       images: [
-        "/assets/image/xbanner_1.png?v=2",
-        "/assets/image/xbanner_2.png?v=2"
+        "assets/image/xbanner_1.png?v=2",
+        "assets/image/xbanner_2.png?v=2"
       ],
       insight: "정보의 우선순위 설정이 핵심입니다.\n가장 중요한 메시지를 상단에 배치하여 고객의 행동을 자연스럽게 유도합니다."
     },
@@ -458,10 +458,10 @@ export default function Portfolio() {
       count: 4,
       desc: "브랜드의 이야기를 정교하게 담아낸 리플렛",
       images: [
-        "/assets/image/leaflet_1.png?v=3",
-        "/assets/image/leaflet_2.png?v=3",
-        "/assets/image/leaflet_3.png?v=3",
-        "/assets/image/leaflet_4.png?v=3"
+        "assets/image/leaflet_1.png?v=3",
+        "assets/image/leaflet_2.png?v=3",
+        "assets/image/leaflet_3.png?v=3",
+        "assets/image/leaflet_4.png?v=3"
       ],
       insight: "페이지를 넘길 때마다 경험이 확장되는 매체입니다.\n논리적인 흐름을 설계하여 브랜드의 이야기를 끝까지 완독하게 만듭니다."
     }

@@ -2,6 +2,7 @@ import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { X, ArrowRight, CheckCircle2, Calculator, Plus, Minus, RotateCcw } from "lucide-react";
 import Footer from "../components/Footer";
+import QuickMenu from "../components/QuickMenu";
 
 const items = [
   { 
@@ -534,7 +535,7 @@ export default function Service() {
   };
 
   return (
-    <div className="min-h-screen bg-white pt-40 pb-32">
+    <div className="min-h-screen bg-white pt-40">
       <div className="max-w-[1400px] mx-auto px-6">
         {/* Section Index */}
         <motion.div 
@@ -989,10 +990,15 @@ export default function Service() {
                     </div>
                   </div>
 
-                  <button className="w-full py-5 bg-[#6366F1] text-white rounded-2xl font-black text-lg hover:shadow-[0_15px_40px_rgba(99,102,241,0.4)] transition-all flex items-center justify-center gap-2 active:scale-[0.98]">
+                  <a 
+                    href="https://open.kakao.com/me/brandone"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="w-full py-5 bg-[#6366F1] text-white rounded-2xl font-black text-lg hover:shadow-[0_15px_40px_rgba(99,102,241,0.4)] transition-all flex items-center justify-center gap-2 active:scale-[0.98]"
+                  >
                     상담 신청하고 확정 견적 받기
                     <ArrowRight className="w-5 h-5" />
-                  </button>
+                  </a>
                   <p className="text-center text-slate-600 text-xs font-medium mt-5">
                     * 위 견적은 선택하신 항목에 따른 예상 비용이며, <br />
                     상담을 통해 상세 범위 확정 시 변동될 수 있습니다.
@@ -1004,6 +1010,7 @@ export default function Service() {
         </div>
       </section>
 
+      <QuickMenu />
       <Footer className="bg-[#020617]" />
 
       {/* Interactive Overlay */}
@@ -1191,12 +1198,14 @@ export default function Service() {
                       >
                         가상 견적
                       </button>
-                      <button 
-                        onClick={handleClose}
+                      <a 
+                        href="https://open.kakao.com/me/brandone"
+                        target="_blank"
+                        rel="noopener noreferrer"
                         className="px-8 py-4 bg-brand-primary text-white rounded-full font-black hover:shadow-lg hover:shadow-brand-primary/30 transition-all"
                       >
                         상담 신청
-                      </button>
+                      </a>
                     </div>
                   </>
                 )}

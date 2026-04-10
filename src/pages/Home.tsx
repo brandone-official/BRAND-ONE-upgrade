@@ -2,6 +2,7 @@ import { useState, useRef } from "react";
 import { motion, AnimatePresence, useScroll, useTransform } from "motion/react";
 import { MessageSquare, FileText, Link2Off, LayoutGrid, Milestone, ArrowLeftRight, Phone, MessageCircle } from "lucide-react";
 import Footer from "../components/Footer";
+import QuickMenu from "../components/QuickMenu";
 
 const items = [
   { name: "Strategy", type: "star", color: "text-amber-400" },
@@ -893,22 +894,26 @@ export default function Home() {
               </motion.h2>
 
               <div className="flex flex-wrap gap-4 mb-10">
-                <motion.button 
+                <motion.a 
+                  href="tel:070-8849-6806"
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                   className="flex items-center gap-3 bg-white text-slate-900 px-8 py-5 rounded-2xl font-black text-lg shadow-xl hover:bg-slate-50 transition-all"
                 >
                   <Phone className="w-6 h-6 text-brand-primary" />
                   전화 문의
-                </motion.button>
-                <motion.button 
+                </motion.a>
+                <motion.a 
+                  href="https://open.kakao.com/me/brandone"
+                  target="_blank"
+                  rel="noopener noreferrer"
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                   className="flex items-center gap-3 bg-[#FEE500] text-[#3C1E1E] px-8 py-5 rounded-2xl font-black text-lg shadow-xl hover:bg-[#FADA0A] transition-all"
                 >
                   <MessageCircle className="w-6 h-6" />
                   카톡 문의
-                </motion.button>
+                </motion.a>
               </div>
 
               <motion.p 
@@ -1001,37 +1006,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Floating Quick Menu */}
-      <div className="fixed bottom-8 right-8 z-[100] flex flex-col gap-3">
-        <motion.a
-          href="tel:010-0000-0000"
-          initial={{ opacity: 0, x: 20 }}
-          animate={{ opacity: 1, x: 0 }}
-          whileHover={{ scale: 1.05, x: -5 }}
-          whileTap={{ scale: 0.95 }}
-          className="flex items-center gap-2.5 bg-white/30 text-slate-900 px-4 py-2.5 rounded-2xl font-black text-sm shadow-[0_10px_30px_rgba(0,0,0,0.08)] border border-white/40 backdrop-blur-xl group"
-        >
-          <div className="w-7 h-7 bg-brand-primary/10 rounded-xl flex items-center justify-center group-hover:bg-brand-primary group-hover:text-white transition-colors">
-            <Phone className="w-3.5 h-3.5" />
-          </div>
-          <span className="hidden md:block">전화</span>
-        </motion.a>
-
-        <motion.a
-          href="#"
-          initial={{ opacity: 0, x: 20 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ delay: 0.1 }}
-          whileHover={{ scale: 1.05, x: -5 }}
-          whileTap={{ scale: 0.95 }}
-          className="flex items-center gap-2.5 bg-[#FEE500]/40 text-[#3C1E1E] px-4 py-2.5 rounded-2xl font-black text-sm shadow-[0_10px_30px_rgba(254,229,0,0.15)] border border-[#FEE500]/30 backdrop-blur-xl group"
-        >
-          <div className="w-7 h-7 bg-[#3C1E1E]/10 rounded-xl flex items-center justify-center group-hover:bg-[#3C1E1E] group-hover:text-[#FEE500] transition-colors">
-            <MessageCircle className="w-3.5 h-3.5" />
-          </div>
-          <span className="hidden md:block">카톡</span>
-        </motion.a>
-      </div>
+      <QuickMenu />
       <Footer className="bg-black" />
     </div>
   );

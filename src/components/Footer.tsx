@@ -1,4 +1,5 @@
 import { motion } from "motion/react";
+import { Link } from "react-router-dom";
 
 interface FooterProps {
   className?: string;
@@ -29,7 +30,7 @@ export default function Footer({ className = "" }: FooterProps) {
               </div>
               <div className="flex gap-4">
                 <span className="w-24 shrink-0 opacity-60">대표자</span>
-                <span className={isDark ? "text-slate-300" : "text-slate-700"}>황대영</span>
+                <span className={isDark ? "text-slate-300" : "text-slate-700"}>황대영 / 박승현</span>
               </div>
               <div className="flex gap-4 md:col-span-2">
                 <span className="w-24 shrink-0 opacity-60">주소</span>
@@ -49,8 +50,8 @@ export default function Footer({ className = "" }: FooterProps) {
           {/* Right: Links & Copyright */}
           <div className="lg:text-right flex flex-col justify-between gap-10">
             <div className="flex lg:justify-end gap-8 text-sm font-bold">
-              <a href="#" className={`hover:text-brand-primary transition-colors ${isDark ? "text-slate-300" : "text-slate-700"}`}>이용약관</a>
-              <a href="#" className={`hover:text-brand-primary transition-colors ${isDark ? "text-slate-300" : "text-slate-700"}`}>개인정보처리방침</a>
+              <Link to="/terms" className={`hover:text-brand-primary transition-colors ${isDark ? "text-slate-300" : "text-slate-700"}`}>이용약관</Link>
+              <Link to="/privacy" className={`hover:text-brand-primary transition-colors ${isDark ? "text-slate-300" : "text-slate-700"}`}>개인정보처리방침</Link>
             </div>
 
             <div className="space-y-2">

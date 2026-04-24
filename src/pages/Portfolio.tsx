@@ -4,12 +4,13 @@ import { motion, AnimatePresence } from "motion/react";
 import { 
   Monitor, Smartphone, Zap, Search, Globe, ArrowUpRight, Play, CheckCircle2, 
   Star, Layout, FileText, MapPin, Video, PenTool, Loader2, ArrowRight,
-  ArrowDown, User, AlertCircle, X, ChevronLeft, ChevronRight, MessageCircle
+  ArrowDown, User, AlertCircle, X, ChevronLeft, ChevronRight, MessageCircle,
+  ArrowLeft
 } from "lucide-react";
 import Footer from "../components/Footer";
 import QuickMenu from "../components/QuickMenu";
 
-const items = [
+const itemsPC = [
   { 
     id: "strategy",
     name: "Strategy", 
@@ -84,14 +85,21 @@ const items = [
     title: "오프라인",
     icon: PenTool,
     subTitle: "손끝으로 완성되는 일관된 경험",
-    quote: "온라인에서 시작된 긍정적인 기대가 오프라인의 실물로 증명될 때\n브랜드는 완성됩니다.",
+    quote: "온라인에서 시작된 긍정적인 기대가\n오프라인의 실물로 증명될 때 브랜드는 완성됩니다.",
     painPoint: "디지털에서의 세련된 이미지가 오프라인의 작은 제작물 하나로 인해 퇴색되고 있지는 않나요?\n작은 불일치가 브랜드의 전체적인 신뢰도를 떨어뜨릴 수 있습니다.",
     guideText: "BRAND ONE은 고객이 접하는 모든 물리적 매체에 일관된 브랜드 보이스를 입힙니다.\n온라인의 약속이 오프라인의 실물로 이어지는 매끄러운 경험을 통해, 고객의 신뢰를 마지막 순간까지 견고하게 지켜 드립니다."
   },
 ];
 
-const ServiceCard = ({ item, size = "normal", onClick, active = false }: { item: typeof items[0], size?: "normal" | "mini" | "icon", onClick?: () => void, active?: boolean }) => {
-  const baseScale = size === "mini" ? 0.45 : size === "icon" ? 0.25 : 1;
+const itemsMobile = JSON.parse(JSON.stringify(itemsPC));
+// PC와 모바일 환경 분리: 모바일에서는 오프라인 인용구를 5줄로 유지 (고객 요청)
+itemsMobile[5].quote = "온라인에서 시작된\n긍정적인 기대가\n오프라인의 실물로\n증명될 때 브랜드는\n완성됩니다.";
+// PC와 모바일 환경 분리: 모바일에서는 오프라인 인용구를 5줄로 유지 (고객 요청)
+itemsMobile[5].quote = "온라인에서 시작된\n긍정적인 기대가\n오프라인의 실물로\n증명될 때 브랜드는\n완성됩니다.";
+// PC와 모바일 환경 분리: 모바일에서는 오프라인 인용구를 5줄로 유지 (고객 요청)
+itemsMobile[5].quote = "온라인에서 시작된\n긍정적인 기대가\n오프라인의 실물로\n증명될 때 브랜드는\n완성됩니다.";
+
+const ServiceCardPC = ({ item, size = "normal", onClick, active = false }: { item: any, size?: "normal" | "mini" | "icon", onClick?: () => void, active?: boolean }) => {
   const containerSize = "w-80 h-80";
   const boxSize = "w-80 h-52";
 
@@ -228,11 +236,13 @@ const ServiceCard = ({ item, size = "normal", onClick, active = false }: { item:
     }
   };
 
+  const scale = size === "mini" ? 0.45 : size === "icon" ? 0.25 : 1;
+
   return (
     <motion.div 
-      initial={{ filter: active ? "grayscale(0%)" : "grayscale(100%)", opacity: active ? 1 : 0.8, scale: baseScale }}
-      animate={{ filter: active ? "grayscale(0%)" : "grayscale(100%)", opacity: active ? 1 : 0.8, scale: baseScale }}
-      whileHover={{ filter: "grayscale(0%)", opacity: 1, scale: baseScale * 1.1 }}
+      initial={{ filter: active ? "grayscale(0%)" : "grayscale(100%)", opacity: active ? 1 : 0.8, scale }}
+      animate={{ filter: active ? "grayscale(0%)" : "grayscale(100%)", opacity: active ? 1 : 0.8, scale }}
+      whileHover={{ filter: "grayscale(0%)", opacity: 1, scale: scale * 1.1 }}
       transition={{ duration: 0.3, ease: "easeOut" }}
       className="cursor-pointer origin-center"
       onClick={onClick}
@@ -242,8 +252,158 @@ const ServiceCard = ({ item, size = "normal", onClick, active = false }: { item:
   );
 };
 
+const ServiceCardMobile = ({ item, size = "normal", onClick, active = false }: { item: any, size?: "normal" | "mini" | "icon", onClick?: () => void, active?: boolean }) => {
+  const containerSize = "w-80 h-80";
+  const boxSize = "w-80 h-52";
+
+  const renderContent = () => {
+    switch (item.type) {
+      case "star":
+        return (
+          <div className={`relative flex items-center justify-center ${containerSize}`}>
+            <motion.div
+              animate={{ rotate: 360 }}
+              transition={{ duration: 12, repeat: Infinity, ease: "linear" }}
+              className="absolute inset-0 flex items-center justify-center"
+            >
+              {[...Array(12)].map((_, i) => (
+                <div
+                  key={i}
+                  className={`absolute w-1.5 h-full ${item.accentBg}/20`}
+                  style={{ transform: `rotate(${i * 30}deg)` }}
+                />
+              ))}
+            </motion.div>
+            <span className="relative z-10 font-black text-3xl tracking-tighter text-slate-900 uppercase italic">
+              {item.name}
+            </span>
+          </div>
+        );
+      case "orbit":
+        return (
+          <div className={`relative flex items-center justify-center ${containerSize}`}>
+            <div className={`w-56 h-56 rounded-full border-4 ${item.accentBg}/10 flex items-center justify-center`}>
+              <div className={`w-40 h-40 rounded-full ${item.accentBg} flex items-center justify-center text-white font-black text-2xl italic uppercase shadow-2xl`}>
+                {item.name}
+              </div>
+            </div>
+            <motion.div
+              animate={{ rotate: 360 }}
+              transition={{ duration: 5, repeat: Infinity, ease: "linear" }}
+              className="absolute w-64 h-64"
+            >
+              <div className="absolute top-0 left-1/2 -translate-x-1/2 w-8 h-8 bg-amber-300 rounded-full shadow-xl border-4 border-white" />
+            </motion.div>
+          </div>
+        );
+      case "browser":
+        return (
+          <div className={`${boxSize} bg-white border-4 border-slate-100 rounded-3xl overflow-hidden shadow-xl flex flex-col`}>
+            <div className="h-10 bg-slate-50 border-b-2 border-slate-100 flex items-center px-4 gap-2">
+              <div className="w-3 h-3 rounded-full bg-rose-400" />
+              <div className="w-3 h-3 rounded-full bg-amber-400" />
+              <div className="w-3 h-3 rounded-full bg-emerald-400" />
+            </div>
+            <div className="flex-1 flex items-center justify-center p-6 bg-white">
+              <span className={`font-black text-3xl ${item.color} uppercase italic tracking-tighter`}>
+                {item.name}
+              </span>
+              <motion.div
+                animate={{ 
+                  opacity: [1, 0, 1],
+                  scaleY: [1, 1.2, 1]
+                }}
+                transition={{ duration: 0.6, repeat: Infinity }}
+                className={`w-2 h-10 ${item.accentBg} ml-2`}
+              />
+            </div>
+          </div>
+        );
+      case "text":
+        return (
+          <div className={`${boxSize} flex flex-col justify-center gap-4 px-4`}>
+            <div className={`w-full h-3 ${item.accentBg}/10 rounded-full overflow-hidden`}>
+              <motion.div
+                animate={{ x: ["-100%", "100%"] }}
+                transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
+                className={`w-2/3 h-full ${item.accentBg}`}
+              />
+            </div>
+            <span className={`font-black text-5xl ${item.color} uppercase italic tracking-tighter text-center`}>
+              {item.name}
+            </span>
+            <div className={`w-full h-3 ${item.accentBg}/10 rounded-full overflow-hidden`}>
+              <motion.div
+                animate={{ x: ["100%", "-100%"] }}
+                transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
+                className={`w-2/3 h-full ${item.accentBg}`}
+              />
+            </div>
+          </div>
+        );
+      case "play":
+        return (
+          <div className={`relative flex items-center justify-center ${containerSize}`}>
+            <motion.div
+              animate={{ rotate: -360 }}
+              transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+              className="absolute w-72 h-72"
+            >
+              {[...Array(10)].map((_, i) => (
+                <div
+                  key={i}
+                  className="absolute w-6 h-6 bg-slate-900 rounded-full shadow-sm"
+                  style={{
+                    top: "50%",
+                    left: "50%",
+                    transform: `rotate(${i * 36}deg) translate(120px) translate(-50%, -50%)`,
+                  }}
+                />
+              ))}
+            </motion.div>
+            <div className="w-28 h-28 bg-slate-900 rounded-[32px] flex items-center justify-center shadow-2xl z-10">
+              <div className="w-0 h-0 border-t-[14px] border-t-transparent border-l-[24px] border-l-white border-b-[14px] border-b-transparent ml-2" />
+            </div>
+            <span className="absolute bottom-4 font-black text-sm text-slate-900 uppercase tracking-[0.2em] z-10">
+              {item.name}
+            </span>
+          </div>
+        );
+      case "stamp":
+        return (
+          <motion.div
+            animate={{ 
+              scale: [1, 1.03, 1],
+              rotate: [-5, -4, -5]
+            }}
+            transition={{ duration: 0.6, repeat: Infinity, repeatDelay: 2.5 }}
+            className={`${boxSize} border-[6px] border-brand-primary flex items-center justify-center bg-white shadow-[12px_12px_0px_0px_rgba(79,70,229,0.1)]`}
+          >
+            <span className="font-black text-4xl text-brand-primary uppercase italic tracking-tighter">
+              {item.name}
+            </span>
+          </motion.div>
+        );
+      default:
+        return null;
+    }
+  };
+
+  const scale = (size === "mini" ? 0.35 : size === "icon" ? 0.22 : 1) * 0.7;
+
+  return (
+    <div 
+      className={`cursor-pointer origin-center transform`}
+      style={{ scale }}
+      onClick={onClick}
+    >
+      {renderContent()}
+    </div>
+  );
+};
+
 export default function Portfolio() {
-  const [selectedTouchpoint, setSelectedTouchpoint] = useState<typeof items[0] | null>(null);
+  const [selectedTouchpoint, setSelectedTouchpoint] = useState<any>(null);
   const [selectedOfflineItem, setSelectedOfflineItem] = useState<typeof offlineCases[0] | null>(null);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [isFlipped, setIsFlipped] = useState(false);
@@ -255,7 +415,7 @@ export default function Portfolio() {
       id: "place-audit-01",
       title: "들마루정육점일산점",
       url: "https://naver.me/GyYnF1L3",
-      image: "assets/image/place_1.png?v=2",
+      image: "/BRAND-ONE-upgrade/assets/image/place_1.png?v=3",
       hotspots: [],
       scores: [
         { label: "비즈니스 영역 집중도", score: 0, status: "low" },
@@ -275,7 +435,7 @@ export default function Portfolio() {
       id: "place-audit-02",
       title: "경희아소한의원",
       url: "https://naver.me/xiq9XiNo",
-      image: "assets/image/place_2.png?v=2",
+      image: "/BRAND-ONE-upgrade/assets/image/place_2.png?v=3",
       hotspots: [],
       scores: [
         { label: "비즈니스 영역 집중도", score: 30, status: "low" },
@@ -295,7 +455,7 @@ export default function Portfolio() {
       id: "place-audit-03",
       title: "전주W한의원",
       url: "https://naver.me/xOx1uuQA",
-      image: "assets/image/place_3.png?v=2",
+      image: "/BRAND-ONE-upgrade/assets/image/place_3.png?v=3",
       hotspots: [],
       scores: [
         { label: "비즈니스 영역 집중도", score: 90, status: "high" },
@@ -322,7 +482,7 @@ export default function Portfolio() {
       price: "150만원",
       score: 98,
       url: "https://brandone-official.github.io/BRAND-ONE/",
-      image: "assets/image/website_1.png?v=2"
+      image: "/BRAND-ONE-upgrade/assets/image/website_1.png?v=2"
     },
     {
       id: "web-02",
@@ -332,7 +492,7 @@ export default function Portfolio() {
       price: "200만원",
       score: 96,
       url: "https://resetclinic.kr",
-      image: "assets/image/website_2.png?v=2"
+      image: "/BRAND-ONE-upgrade/assets/image/website_2.png?v=2"
     }
   ];
 
@@ -344,7 +504,7 @@ export default function Portfolio() {
       desc: "진정성과 실용적인 스토리텔링으로 마음을 움직이는 콘텐츠",
       tags: ["페르소나 설정", "SEO/AEO 최적화", "고관여 타겟팅"],
       url: "https://blog.naver.com/w-hani/224236745252",
-      image: "assets/image/blog_1.png?v=2"
+      image: "/BRAND-ONE-upgrade/assets/image/blog_1.png?v=2"
     },
     {
       id: "blog-02",
@@ -353,7 +513,7 @@ export default function Portfolio() {
       desc: "실제 치료 사례와 전문 지식을 쉽게 풀어내는 전략",
       tags: ["페르소나 설정", "SEO/AEO 최적화", "저관여 작업"],
       url: "http://asohani.tistory.com/1",
-      image: "assets/image/blog_2.png?v=2"
+      image: "/BRAND-ONE-upgrade/assets/image/blog_2.png?v=2"
     },
     {
       id: "blog-03",
@@ -362,7 +522,7 @@ export default function Portfolio() {
       desc: "커뮤니티 특성에 맞춘 소통형 콘텐츠와 신뢰 구축",
       tags: ["커뮤니티 마케팅", "소통", "잠재적 고객 확보"],
       url: "https://cafe.naver.com/forhani/294",
-      image: "assets/image/blog_3.png?v=2"
+      image: "/BRAND-ONE-upgrade/assets/image/blog_3.png?v=2"
     }
   ];
 
@@ -370,10 +530,10 @@ export default function Portfolio() {
     {
       id: "video-01",
       type: "long",
-      title: "10년 째 낫지 않는 만성 통증, 원인이 음식에 있을 수 있습니다.",
+      title: "한약 먹으면 진짜 살 빠지나요? 마법의 약은 없습니다.",
       desc: "브랜드의 핵심 가치와 철학을 담은 고감도 브랜드 필름",
-      url: "https://youtu.be/fDdywvP6zqU",
-      thumbnail: "assets/image/video_1.png?v=2",
+      url: "https://youtu.be/oW_PddyPzLQ",
+      thumbnail: "https://img.youtube.com/vi/oW_PddyPzLQ/maxresdefault.jpg",
       insight: "영상은 이제 정보 가치를 결정하는 가장 강력한 도구입니다.\n메시지가 흐려지지 않도록 본질을 뚫는 전략 기획이 선행되어야 합니다.\n화려함보다 탄탄한 기획으로 브랜드의 가치를 증명하십시오."
     },
     {
@@ -382,16 +542,16 @@ export default function Portfolio() {
       title: "[리셋바디] 김OO님 인터뷰",
       desc: "실제 고객의 생생한 목소리를 담은 인터뷰 콘텐츠",
       url: "https://youtu.be/pBJWjlAWr2I?si=bTGEQ3h6TpY4qskr",
-      thumbnail: "assets/image/video_4.png?v=2",
+      thumbnail: "/BRAND-ONE-upgrade/assets/image/video_4.png?v=2",
       insight: "정보는 영상으로 흐르고 대중은 진정성에 반응합니다.\n우리만의 목소리를 내려면 복잡함을 덜고 본질에 집중해야 합니다.\n일관성 있는 이야기의 힘이 브랜드의 차별점을 만듭니다."
     },
     {
       id: "video-03",
       type: "short",
-      title: "약 끊을 수 없나요?",
+      title: "다이어트 한약, '이것' 모르면 돈 낭비입니다.",
       desc: "인스타그램 릴스 최적화 포맷의 고효율 광고 콘텐츠",
-      url: "https://youtube.com/shorts/U7XgEtrHnsM?feature=share",
-      thumbnail: "assets/image/video_2.png?v=2",
+      url: "https://youtube.com/shorts/nhjwIkxYA_c?feature=share",
+      thumbnail: "https://img.youtube.com/vi/nhjwIkxYA_c/maxresdefault.jpg",
       insight: "정보는 영상으로 흐르고 대중은 진정성에 반응합니다.\n우리만의 목소리를 내려면 복잡함을 덜고 본질에 집중해야 합니다.\n일관성 있는 이야기의 힘이 브랜드의 차별점을 만듭니다."
     },
     {
@@ -400,7 +560,7 @@ export default function Portfolio() {
       title: "삼치 토마토 콩피",
       desc: "제품의 특장점을 감각적인 영상미로 풀어낸 스토리텔링 콘텐츠",
       url: "https://www.instagram.com/reel/DSbuqZZALOv/?igsh=MW1sdjI3MWgya2hvcw==",
-      thumbnail: "assets/image/video_3.png?v=2",
+      thumbnail: "/BRAND-ONE-upgrade/assets/image/video_3.png?v=2",
       insight: "정보는 영상으로 흐르고 대중은 진정성에 반응합니다.\n우리만의 목소리를 내려면 복잡함을 덜고 본질에 집중해야 합니다.\n일관성 있는 이야기의 힘이 브랜드의 차별점을 만듭니다."
     }
   ];
@@ -414,12 +574,12 @@ export default function Portfolio() {
       count: 6,
       desc: "첫인상을 완성하는 감도 높은 고품격 명함 디자인",
       images: [
-        "assets/image/name_1.png?v=3",
-        "assets/image/name_2.png?v=3",
-        "assets/image/name_3.png?v=3",
-        "assets/image/name_4.png?v=3",
-        "assets/image/name_5.png?v=3",
-        "assets/image/name_6.png?v=3"
+        "/BRAND-ONE-upgrade/assets/image/name_1.png?v=3",
+        "/BRAND-ONE-upgrade/assets/image/name_2.png?v=3",
+        "/BRAND-ONE-upgrade/assets/image/name_3.png?v=3",
+        "/BRAND-ONE-upgrade/assets/image/name_4.png?v=3",
+        "/BRAND-ONE-upgrade/assets/image/name_5.png?v=3",
+        "/BRAND-ONE-upgrade/assets/image/name_6.png?v=3"
       ],
       insight: "단순한 정보를 넘어 브랜드의 격을 전달합니다.\n정교한 타이포그래피와 여백의 조화로 비즈니스 신뢰를 구축합니다."
     },
@@ -431,9 +591,9 @@ export default function Portfolio() {
       count: 3,
       desc: "브랜드의 무드를 완성하는 몰입형 디자인",
       images: [
-        "assets/image/poster_1.png?v=2",
-        "assets/image/poster_2.png?v=2",
-        "assets/image/poster_3.png?v=2"
+        "/BRAND-ONE-upgrade/assets/image/poster_1.png?v=2",
+        "/BRAND-ONE-upgrade/assets/image/poster_2.png?v=2",
+        "/BRAND-ONE-upgrade/assets/image/poster_3.png?v=2"
       ],
       insight: "강력한 문구와 비주얼의 결합으로 찰나의 시선을 장악합니다.\n멀리서도 브랜드가 돋보이도록 압도적인 레이아웃을 설계합니다."
     },
@@ -445,8 +605,8 @@ export default function Portfolio() {
       count: 2,
       desc: "핵심 정보를 직관적으로 전달하는 최적화 배너 디자인",
       images: [
-        "assets/image/xbanner_1.png?v=2",
-        "assets/image/xbanner_2.png?v=2"
+        "/BRAND-ONE-upgrade/assets/image/xbanner_1.png?v=2",
+        "/BRAND-ONE-upgrade/assets/image/xbanner_2.png?v=2"
       ],
       insight: "정보의 우선순위 설정이 핵심입니다.\n가장 중요한 메시지를 상단에 배치하여 고객의 행동을 자연스럽게 유도합니다."
     },
@@ -458,16 +618,16 @@ export default function Portfolio() {
       count: 4,
       desc: "브랜드의 이야기를 정교하게 담아낸 리플렛",
       images: [
-        "assets/image/leaflet_1.png?v=3",
-        "assets/image/leaflet_2.png?v=3",
-        "assets/image/leaflet_3.png?v=3",
-        "assets/image/leaflet_4.png?v=3"
+        "/BRAND-ONE-upgrade/assets/image/leaflet_1.png?v=3",
+        "/BRAND-ONE-upgrade/assets/image/leaflet_2.png?v=3",
+        "/BRAND-ONE-upgrade/assets/image/leaflet_3.png?v=3",
+        "/BRAND-ONE-upgrade/assets/image/leaflet_4.png?v=3"
       ],
       insight: "페이지를 넘길 때마다 경험이 확장되는 매체입니다.\n논리적인 흐름을 설계하여 브랜드의 이야기를 끝까지 완독하게 만듭니다."
     }
   ];
 
-  const handleSelectTouchpoint = (item: typeof items[0]) => {
+  const handleSelectTouchpoint = (item: any) => {
     setSelectedTouchpoint(item);
     setIsLoading(true);
     
@@ -490,7 +650,7 @@ export default function Portfolio() {
 
   const nextImage = () => {
     if (!selectedOfflineItem) return;
-    const isSet = ["Business Card", "Leaflet"].includes(selectedOfflineItem.category);
+    const isSet = ["Namecard", "Leaflet"].includes(selectedOfflineItem.category);
     if (isSet) {
       const pairsCount = Math.ceil(selectedOfflineItem.images.length / 2);
       setCurrentImageIndex((prev) => (prev + 1) % pairsCount);
@@ -502,7 +662,7 @@ export default function Portfolio() {
 
   const prevImage = () => {
     if (!selectedOfflineItem) return;
-    const isSet = ["Business Card", "Leaflet"].includes(selectedOfflineItem.category);
+    const isSet = ["Namecard", "Leaflet"].includes(selectedOfflineItem.category);
     if (isSet) {
       const pairsCount = Math.ceil(selectedOfflineItem.images.length / 2);
       setCurrentImageIndex((prev) => (prev - 1 + pairsCount) % pairsCount);
@@ -515,23 +675,23 @@ export default function Portfolio() {
   return (
     <div className="min-h-screen bg-white">
       {/* 1. Map Area (Hexagon) */}
-      <section className="pt-40 pb-24 bg-slate-50 overflow-hidden">
-        <div className="max-w-[1400px] mx-auto px-6">
+      <section className="pt-24 lg:pt-40 pb-16 lg:pb-24 bg-slate-50 overflow-hidden">
+        <div className="max-w-[1400px] mx-auto px-6 lg:px-6">
           <motion.div 
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="flex items-center gap-4 mb-12"
+            className="flex items-center gap-4 mb-8 lg:mb-12"
           >
             <span className="text-sm font-bold tracking-widest text-brand-primary">01</span>
             <div className="w-12 h-[1px] bg-brand-primary/30" />
             <span className="text-sm font-bold tracking-widest text-slate-400 uppercase">WE CAN DO IT</span>
           </motion.div>
 
-          <div className="text-center mb-12">
+          <div className="text-center mb-8 lg:mb-12">
             <motion.h1 
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              className="text-[48px] md:text-[64px] font-black leading-[1.2] tracking-tight text-brand-secondary mb-6"
+              className="text-[32px] md:text-[48px] lg:text-[64px] font-black leading-[1.2] tracking-tight text-brand-secondary mb-6"
             >
               브랜드의 <span className="text-brand-primary">핵심 접점</span>을 <br />
               한눈에 확인해보세요.
@@ -543,9 +703,10 @@ export default function Portfolio() {
               transition={{ delay: 0.3 }}
               className="flex flex-col items-center gap-3"
             >
-              <p className="text-slate-500 font-medium text-lg max-w-2xl mx-auto break-keep">
-                각 접점을 클릭하면 해당 영역의 <span className="text-brand-primary font-bold underline underline-offset-4 decoration-2">상세 가이드</span>와 <br className="hidden md:block" />
-                <span className="text-brand-primary font-bold underline underline-offset-4 decoration-2">레퍼런스</span>를 확인하실 수 있습니다.
+              <p className="text-slate-500 font-medium text-lg max-w-2xl mx-auto break-keep px-4 leading-relaxed">
+                각 접점을 클릭하면 해당 영역의 <br className="md:hidden" />
+                <span className="text-brand-primary font-bold underline underline-offset-4 decoration-2">상세 가이드</span>와 <span className="text-brand-primary font-bold underline underline-offset-4 decoration-2">레퍼런스</span>를 <br className="md:hidden" />
+                확인하실 수 있습니다.
               </p>
               <motion.div
                 animate={{ y: [0, 5, 0] }}
@@ -559,8 +720,8 @@ export default function Portfolio() {
             </motion.div>
           </div>
 
-          {/* Hexagon Visual */}
-          <div className="relative w-full max-w-[1000px] h-[650px] mx-auto scale-[0.8] md:scale-100">
+          {/* Hexagon Visual (PC ONLY) */}
+          <div className="hidden lg:block relative w-full max-w-[1000px] h-[650px] mx-auto scale-[0.45] md:scale-[0.8] lg:scale-100">
             {/* Hexagon Lines (SVG) */}
             <svg className="absolute inset-0 w-full h-full pointer-events-none" viewBox="0 0 1000 650">
               <path
@@ -579,12 +740,12 @@ export default function Portfolio() {
 
             {/* Hexagon Vertices */}
             {[
-              { x: 500, y: 100, item: items[0] }, // Top: Strategy
-              { x: 760, y: 250, item: items[1] }, // Top Right: Place
-              { x: 760, y: 450, item: items[2] }, // Bottom Right: Website
-              { x: 500, y: 600, item: items[3] }, // Bottom: Blog
-              { x: 240, y: 450, item: items[4] }, // Bottom Left: Video
-              { x: 240, y: 250, item: items[5] }, // Top Left: Offline
+              { x: 500, y: 100, item: itemsPC[0] }, // Top: Strategy
+              { x: 760, y: 250, item: itemsPC[1] }, // Top Right: Place
+              { x: 760, y: 450, item: itemsPC[2] }, // Bottom Right: Website
+              { x: 500, y: 600, item: itemsPC[3] }, // Bottom: Blog
+              { x: 240, y: 450, item: itemsPC[4] }, // Bottom Left: Video
+              { x: 240, y: 250, item: itemsPC[5] }, // Top Left: Offline
             ].map((pt, idx) => (
               <div
                 key={idx}
@@ -596,7 +757,7 @@ export default function Portfolio() {
                 }}
               >
                 <div className="relative">
-                  <ServiceCard 
+                  <ServiceCardPC 
                     item={pt.item} 
                     size="mini" 
                     onClick={() => handleSelectTouchpoint(pt.item)}
@@ -604,6 +765,33 @@ export default function Portfolio() {
                 </div>
               </div>
             ))}
+          </div>
+
+          {/* Mobile Layout (MOBILE ONLY) */}
+          <div className="lg:hidden flex flex-col gap-6 px-4 mb-16">
+            <div className="grid grid-cols-1 gap-6">
+              {itemsMobile.map((item, idx) => (
+                <motion.div
+                  key={idx}
+                  initial={{ opacity: 0, x: -20 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  transition={{ delay: idx * 0.1 }}
+                  className={`p-6 rounded-[32px] border ${selectedTouchpoint?.id === item.id ? 'bg-indigo-50 border-indigo-200' : 'bg-white border-slate-100'} flex items-center gap-6 shadow-sm`}
+                  onClick={() => handleSelectTouchpoint(item)}
+                >
+                  <div className="w-20 h-20 flex-shrink-0 flex items-center justify-center">
+                    <ServiceCardMobile item={item} size="mini" active={selectedTouchpoint?.id === item.id} />
+                  </div>
+                  <div>
+                    <h3 className="text-xl font-black text-slate-900 mb-1">{item.title}</h3>
+                    <p className="text-xs font-bold text-slate-500 leading-tight">{item.subTitle}</p>
+                  </div>
+                  <div className="ml-auto">
+                    <ArrowRight size={20} className={selectedTouchpoint?.id === item.id ? 'text-indigo-600' : 'text-slate-300'} />
+                  </div>
+                </motion.div>
+              ))}
+            </div>
           </div>
         </div>
       </section>
@@ -637,7 +825,7 @@ export default function Portfolio() {
                 <div className="flex flex-col md:flex-row md:items-end justify-between gap-8">
                   <div className="flex items-center gap-4 md:gap-6">
                     <div className="w-24 h-24 flex items-center justify-center">
-                      <ServiceCard 
+                      <ServiceCardPC 
                         item={selectedTouchpoint} 
                         size="icon" 
                         active={true}
@@ -668,10 +856,10 @@ export default function Portfolio() {
                         <div className="flex items-start gap-6 mb-12">
                           <div className={`w-1.5 h-20 ${selectedTouchpoint.accentBg} rounded-full`} />
                           <div>
-                            <h3 className="text-4xl md:text-5xl font-black text-slate-900 mb-4 tracking-tighter">
+                            <h3 className="text-4xl md:text-5xl font-black text-slate-900 mb-4 tracking-tighter break-keep">
                               {selectedTouchpoint.title}
                             </h3>
-                            <p className="text-2xl md:text-3xl font-black text-slate-900 tracking-tight">
+                            <p className="text-2xl md:text-3xl font-black text-slate-900 tracking-tight break-keep">
                               {selectedTouchpoint.subTitle}
                             </p>
                           </div>
@@ -685,27 +873,139 @@ export default function Portfolio() {
                             </p>
                           </div>
 
-                          {/* Pain Point */}
-                          <div>
-                            <h4 className="text-sm font-black text-rose-500 uppercase tracking-widest mb-4">PAIN POINT</h4>
-                            <p className="text-lg md:text-xl font-bold text-slate-600 leading-relaxed break-keep whitespace-pre-line">
-                              {selectedTouchpoint.painPoint}
-                            </p>
-                          </div>
+                          {/* Strategy Specific Mobile Guide (Mixed Proposal 1 & 2) */}
+                          {selectedTouchpoint.id === 'strategy' ? (
+                            <>
+                              {/* PC Version (Hidden on Mobile) */}
+                              <div className="hidden md:block space-y-12">
+                                {/* Pain Point */}
+                                <div>
+                                  <h4 className="text-sm font-black text-rose-500 uppercase tracking-widest mb-4">PAIN POINT</h4>
+                                  <p className="text-lg md:text-xl font-bold text-slate-600 leading-relaxed break-keep whitespace-pre-line">
+                                    {selectedTouchpoint.painPoint}
+                                  </p>
+                                </div>
 
-                          {/* Guide / Solution */}
-                          <div>
-                            <h4 className="text-sm font-black text-emerald-500 uppercase tracking-widest mb-4">GUIDE / SOLUTION</h4>
-                            <p className="text-lg md:text-xl font-bold text-slate-600 leading-relaxed break-keep whitespace-pre-line">
-                              {selectedTouchpoint.guideText}
-                            </p>
-                          </div>
+                                {/* Guide / Solution */}
+                                <div>
+                                  <h4 className="text-sm font-black text-emerald-500 uppercase tracking-widest mb-4">GUIDE / SOLUTION</h4>
+                                  <p className="text-lg md:text-xl font-bold text-slate-600 leading-relaxed break-keep whitespace-pre-line">
+                                    {selectedTouchpoint.guideText}
+                                  </p>
+                                </div>
+                              </div>
+
+                              {/* Mobile Optimized Strategy (Visible on Mobile) */}
+                              <div className="md:hidden space-y-12">
+                                {/* Step-by-Step Process (Proposal 2) */}
+                                <div className="space-y-8">
+                                  <h4 className="text-xs font-black text-amber-500 uppercase tracking-widest px-1">Strategy Process</h4>
+                                  <div className="relative pl-8 space-y-10">
+                                    {/* Vertical Line */}
+                                    <div className="absolute left-3 top-2 bottom-2 w-0.5 bg-amber-100" />
+                                    
+                                    {/* Step 1 */}
+                                    <motion.div 
+                                      initial={{ opacity: 0, x: -10 }}
+                                      whileInView={{ opacity: 1, x: 0 }}
+                                      className="relative"
+                                    >
+                                      <div className="absolute -left-8 top-1.5 w-6 h-6 rounded-full bg-amber-400 border-4 border-white shadow-sm flex items-center justify-center">
+                                        <div className="w-1.5 h-1.5 rounded-full bg-white" />
+                                      </div>
+                                      <h5 className="text-lg font-black text-slate-900 mb-1">01. 브랜드 진단</h5>
+                                      <p className="text-slate-500 font-bold leading-relaxed break-keep text-sm">
+                                        현재 브랜드의 위치와 <br />
+                                        성장을 가로막는 근본 문제를 <br />
+                                        객관적 데이터로 분석합니다.
+                                      </p>
+                                    </motion.div>
+
+                                    {/* Step 2 */}
+                                    <motion.div 
+                                      initial={{ opacity: 0, x: -10 }}
+                                      whileInView={{ opacity: 1, x: 0 }}
+                                      transition={{ delay: 0.1 }}
+                                      className="relative"
+                                    >
+                                      <div className="absolute -left-8 top-1.5 w-6 h-6 rounded-full bg-amber-400 border-4 border-white shadow-sm flex items-center justify-center">
+                                        <div className="w-1.5 h-1.5 rounded-full bg-white" />
+                                      </div>
+                                      <h5 className="text-lg font-black text-slate-900 mb-1">02. 정격 가치 설계</h5>
+                                      <p className="text-slate-500 font-bold leading-relaxed break-keep text-sm">
+                                        시장 내 독보적인 무기를 정의하고, <br />
+                                        고객의 뇌리에 깊이 남을 <br />
+                                        핵심 경험 가치를 구축합니다.
+                                      </p>
+                                    </motion.div>
+
+                                    {/* Step 3 */}
+                                    <motion.div 
+                                      initial={{ opacity: 0, x: -10 }}
+                                      whileInView={{ opacity: 1, x: 0 }}
+                                      transition={{ delay: 0.2 }}
+                                      className="relative"
+                                    >
+                                      <div className="absolute -left-8 top-1.5 w-6 h-6 rounded-full bg-amber-400 border-4 border-white shadow-sm flex items-center justify-center">
+                                        <div className="w-1.5 h-1.5 rounded-full bg-white" />
+                                      </div>
+                                      <h5 className="text-lg font-black text-slate-900 mb-1">03. 전환 최적화 믹스</h5>
+                                      <p className="text-slate-500 font-bold leading-relaxed break-keep text-sm">
+                                        최적의 터치포인트를 선별하고, <br />
+                                        지표로 증명되는 <br />
+                                        실전 로드맵을 제안합니다.
+                                      </p>
+                                    </motion.div>
+                                  </div>
+                                </div>
+
+                                {/* Key Insight Card (Proposal 1) */}
+                                <motion.div 
+                                  initial={{ opacity: 0, scale: 0.95 }}
+                                  whileInView={{ opacity: 1, scale: 1 }}
+                                  className="bg-slate-50 rounded-3xl p-7 border border-slate-100 shadow-inner"
+                                >
+                                  <div className="flex items-center gap-3 mb-5">
+                                    <div className="w-10 h-10 rounded-xl bg-amber-400 flex items-center justify-center text-white shadow-lg">
+                                      <Star size={20} />
+                                    </div>
+                                    <span className="text-xs font-black text-amber-500 uppercase tracking-widest">Core Insight</span>
+                                  </div>
+                                  <p className="text-slate-700 font-bold leading-relaxed break-keep text-base">
+                                    정교한 설계는 <br />
+                                    마케팅의 여정을 <br />
+                                    단순한 <span className="text-rose-500">'지출'</span>이 아닌 <br />
+                                    <span className="text-brand-primary underline underline-offset-4 decoration-2 font-black">'미래를 위한 자산'</span>으로 <br />
+                                    완벽하게 바꿔줍니다.
+                                  </p>
+                                </motion.div>
+                              </div>
+                            </>
+                          ) : (
+                            <>
+                              {/* Pain Point */}
+                              <div>
+                                <h4 className="text-sm font-black text-rose-500 uppercase tracking-widest mb-4">PAIN POINT</h4>
+                                <p className="text-lg md:text-xl font-bold text-slate-600 leading-relaxed break-keep whitespace-pre-line">
+                                  {selectedTouchpoint.painPoint}
+                                </p>
+                              </div>
+
+                              {/* Guide / Solution */}
+                              <div>
+                                <h4 className="text-sm font-black text-emerald-500 uppercase tracking-widest mb-4">GUIDE / SOLUTION</h4>
+                                <p className="text-lg md:text-xl font-bold text-slate-600 leading-relaxed break-keep whitespace-pre-line">
+                                  {selectedTouchpoint.guideText}
+                                </p>
+                              </div>
+                            </>
+                          )}
                         </div>
                       </div>
 
                       {/* Decorative Background Icon */}
                       <div className="absolute -right-20 -bottom-20 opacity-[0.05] pointer-events-none scale-[1.5]">
-                        <ServiceCard item={selectedTouchpoint} size="normal" active={false} />
+                        <ServiceCardPC item={selectedTouchpoint} size="normal" active={false} />
                       </div>
                     </div>
 
@@ -746,8 +1046,8 @@ export default function Portfolio() {
                                 ))}
                               </div>
                               <div className="p-8 pt-0">
-                                <h4 className="text-xl font-black text-slate-900 mb-2">{offlineCases[1].title}</h4>
-                                <p className="text-sm font-bold text-slate-500 leading-relaxed">{offlineCases[1].desc}</p>
+                                <h4 className="text-xl font-black text-slate-900 mb-2 break-keep">{offlineCases[1].title}</h4>
+                                <p className="text-sm font-bold text-slate-500 leading-relaxed break-keep">{offlineCases[1].desc}</p>
                               </div>
                             </motion.div>
                           </div>
@@ -778,15 +1078,15 @@ export default function Portfolio() {
                                 ))}
                               </div>
                               <div className="p-8 pt-0">
-                                <h4 className="text-xl font-black text-slate-900 mb-2">{offlineCases[2].title}</h4>
-                                <p className="text-sm font-bold text-slate-500 leading-relaxed">{offlineCases[2].desc}</p>
+                                <h4 className="text-xl font-black text-slate-900 mb-2 break-keep">{offlineCases[2].title}</h4>
+                                <p className="text-sm font-bold text-slate-500 leading-relaxed break-keep">{offlineCases[2].desc}</p>
                               </div>
                             </motion.div>
                           </div>
 
-                          {/* Column 3: Business Card & Leaflet */}
+                          {/* Column 3: Namecard & Leaflet */}
                           <div className="md:col-span-4 flex flex-col gap-8">
-                            {/* Business Card */}
+                            {/* Namecard */}
                             <motion.div 
                               whileHover={{ y: -10 }}
                               onClick={() => handleOpenOfflineModal(offlineCases[0])}
@@ -818,8 +1118,8 @@ export default function Portfolio() {
                                 )}
                               </div>
                               <div className="p-8 pt-0">
-                                <h4 className="text-xl font-black text-slate-900 mb-2">{offlineCases[0].title}</h4>
-                                <p className="text-sm font-bold text-slate-500 leading-relaxed">{offlineCases[0].desc}</p>
+                                <h4 className="text-xl font-black text-slate-900 mb-2 break-keep">{offlineCases[0].title}</h4>
+                                <p className="text-sm font-bold text-slate-500 leading-relaxed break-keep">{offlineCases[0].desc}</p>
                               </div>
                             </motion.div>
 
@@ -877,30 +1177,42 @@ export default function Portfolio() {
                           {/* Row 1: Long 1 + Short 1 */}
                           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
                             <div className="lg:col-span-8 flex flex-col gap-8">
-                              <motion.div 
-                                whileHover={{ scale: 0.98 }}
-                                className="group relative bg-slate-900 rounded-[40px] overflow-hidden shadow-2xl"
-                              >
-                                <div className="aspect-[16/9] relative overflow-hidden">
-                                  <img 
-                                    src={videoCases[0].thumbnail} 
-                                    alt={videoCases[0].title}
-                                    className="w-full h-full object-cover opacity-60 group-hover:scale-105 transition-transform duration-1000"
-                                    referrerPolicy="no-referrer"
-                                  />
-                                  <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-transparent to-transparent opacity-80" />
-                                  <div className="absolute inset-0 flex items-center justify-center">
-                                    <div className="w-20 h-20 rounded-full bg-white/10 backdrop-blur-md border border-white/20 flex items-center justify-center group-hover:scale-110 transition-transform duration-500">
-                                      <Play fill="white" className="text-white ml-1" size={32} />
+                              <div className="flex flex-col gap-6">
+                                <motion.div 
+                                  whileHover={{ scale: 0.98 }}
+                                  className="group relative bg-slate-900 rounded-[40px] overflow-hidden shadow-2xl"
+                                >
+                                  <div className="aspect-[16/9] relative overflow-hidden">
+                                    <img 
+                                      src={videoCases[0].thumbnail} 
+                                      alt={videoCases[0].title}
+                                      className="w-full h-full object-cover opacity-80 group-hover:scale-105 transition-transform duration-1000"
+                                      referrerPolicy="no-referrer"
+                                    />
+                                    <div className="absolute inset-0 bg-gradient-to-t from-slate-900/60 via-transparent to-transparent opacity-80" />
+                                    
+                                    {/* PC Version Content (Overlay) */}
+                                    <div className="hidden lg:flex absolute inset-0 p-10 flex-col justify-end">
+                                      <span className="px-3 py-1 bg-white/20 backdrop-blur-md rounded-full text-[10px] font-black text-white uppercase tracking-widest mb-4 w-fit">Long-form</span>
+                                      <h4 className="text-3xl font-black text-white mb-2 tracking-tight break-keep">{videoCases[0].title}</h4>
+                                    </div>
+
+                                    {/* Play Button */}
+                                    <div className="absolute inset-0 flex items-center justify-center">
+                                      <div className="w-20 h-20 rounded-full bg-white/10 backdrop-blur-md border border-white/20 flex items-center justify-center group-hover:scale-110 transition-transform duration-500">
+                                        <Play fill="white" className="text-white ml-1" size={32} />
+                                      </div>
                                     </div>
                                   </div>
-                                  <div className="absolute bottom-8 left-8 right-8">
-                                    <span className="px-3 py-1 bg-white/20 backdrop-blur-md rounded-full text-[10px] font-black text-white uppercase tracking-widest mb-3 inline-block">Long-form</span>
-                                    <h4 className="text-2xl lg:text-3xl font-black text-white mb-2 tracking-tight">{videoCases[0].title}</h4>
-                                  </div>
+                                  <a href={videoCases[0].url} target="_blank" rel="noopener noreferrer" className="absolute inset-0 z-10" />
+                                </motion.div>
+                                
+                                {/* Mobile Version Content (Separate) */}
+                                <div className="lg:hidden px-6">
+                                  <span className="px-3 py-1 bg-slate-100 rounded-full text-[10px] font-black text-slate-400 uppercase tracking-widest mb-3 inline-block">Long-form</span>
+                                  <h4 className="text-xl font-black text-slate-900 mb-2 tracking-tight break-keep">{videoCases[0].title}</h4>
                                 </div>
-                                <a href={videoCases[0].url} target="_blank" rel="noopener noreferrer" className="absolute inset-0 z-10" />
-                              </motion.div>
+                              </div>
                               
                               {/* Insight Card 1 */}
                               <motion.div 
@@ -915,7 +1227,7 @@ export default function Portfolio() {
                                     </div>
                                     <span className="text-xs font-black text-white/40 uppercase tracking-[0.2em]">Director's Insight</span>
                                   </div>
-                                  <p className="text-lg lg:text-xl font-bold text-white leading-[1.8] whitespace-pre-line tracking-tight">
+                                  <p className="text-lg lg:text-xl font-bold text-white leading-[1.8] whitespace-pre-line tracking-tight break-keep">
                                     {videoCases[0].insight}
                                   </p>
                                 </div>
@@ -925,37 +1237,46 @@ export default function Portfolio() {
                               </motion.div>
                             </div>
 
-                            <div className="lg:col-span-4">
-                              <motion.div 
-                                whileHover={{ scale: 0.98 }}
-                                className="group relative bg-slate-900 rounded-[40px] overflow-hidden shadow-2xl"
-                              >
-                                <div className="aspect-[9/16] relative overflow-hidden">
-                                  <img 
-                                    src={videoCases[2].thumbnail} 
-                                    alt={videoCases[2].title}
-                                    className="w-full h-full object-cover opacity-60 group-hover:scale-105 transition-transform duration-1000"
-                                    referrerPolicy="no-referrer"
-                                  />
-                                  <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-transparent to-transparent opacity-80" />
-                                  <div className="absolute inset-0 flex items-center justify-center">
-                                    <div className="w-16 h-16 rounded-full bg-white/10 backdrop-blur-md border border-white/20 flex items-center justify-center group-hover:scale-110 transition-transform duration-500">
-                                      <Play fill="white" className="text-white ml-1" size={24} />
-                                    </div>
-                                  </div>
-                                  <div className="absolute bottom-8 left-8 right-8">
-                                    <span className="px-3 py-1 bg-white/20 backdrop-blur-md rounded-full text-[10px] font-black text-white uppercase tracking-widest mb-3 inline-block">Short-form</span>
-                                    <h4 className="text-xl font-black text-white mb-2 tracking-tight">{videoCases[2].title}</h4>
-                                  </div>
-                                </div>
-                                <a href={videoCases[2].url} target="_blank" rel="noopener noreferrer" className="absolute inset-0 z-10" />
-                              </motion.div>
-                            </div>
+                            <div className="lg:col-span-4 flex flex-col gap-6">
+                               <motion.div 
+                                 whileHover={{ scale: 0.98 }}
+                                 className="group relative bg-slate-900 rounded-[40px] overflow-hidden shadow-2xl"
+                               >
+                                 <div className="aspect-[9/16] relative overflow-hidden">
+                                   <img 
+                                     src={videoCases[2].thumbnail} 
+                                     alt={videoCases[2].title}
+                                     className="w-full h-full object-cover opacity-80 group-hover:scale-105 transition-transform duration-1000"
+                                     referrerPolicy="no-referrer"
+                                   />
+                                   <div className="absolute inset-0 bg-gradient-to-t from-slate-900/60 via-transparent to-transparent opacity-80" />
+                                   
+                                   {/* PC Version Content (Overlay) */}
+                                   <div className="hidden lg:flex absolute inset-0 p-8 flex-col justify-end">
+                                     <span className="px-3 py-1 bg-white/20 backdrop-blur-md rounded-full text-[10px] font-black text-white uppercase tracking-widest mb-4 w-fit">Short-form</span>
+                                     <h4 className="text-xl font-black text-white mb-2 tracking-tight break-keep">{videoCases[2].title}</h4>
+                                   </div>
+
+                                   <div className="absolute inset-0 flex items-center justify-center">
+                                     <div className="w-16 h-16 rounded-full bg-white/10 backdrop-blur-md border border-white/20 flex items-center justify-center group-hover:scale-110 transition-transform duration-500">
+                                       <Play fill="white" className="text-white ml-1" size={24} />
+                                     </div>
+                                   </div>
+                                 </div>
+                                 <a href={videoCases[2].url} target="_blank" rel="noopener noreferrer" className="absolute inset-0 z-10" />
+                               </motion.div>
+
+                               {/* Mobile Version Content (Separate) */}
+                               <div className="lg:hidden px-6">
+                                 <span className="px-3 py-1 bg-slate-100 rounded-full text-[10px] font-black text-slate-400 uppercase tracking-widest mb-3 inline-block">Short-form</span>
+                                 <h4 className="text-lg font-black text-slate-900 mb-2 tracking-tight break-keep">{videoCases[2].title}</h4>
+                               </div>
+                             </div>
                           </div>
 
                           {/* Row 2: Short 2 + Long 2 */}
                           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-                            <div className="lg:col-span-4 order-2 lg:order-1">
+                            <div className="lg:col-span-4 order-2 lg:order-1 flex flex-col gap-6">
                               <motion.div 
                                 whileHover={{ scale: 0.98 }}
                                 className="group relative bg-slate-900 rounded-[40px] overflow-hidden shadow-2xl"
@@ -964,25 +1285,34 @@ export default function Portfolio() {
                                   <img 
                                     src={videoCases[3].thumbnail} 
                                     alt={videoCases[3].title}
-                                    className="w-full h-full object-cover opacity-60 group-hover:scale-105 transition-transform duration-1000"
+                                    className="w-full h-full object-cover opacity-80 group-hover:scale-105 transition-transform duration-1000"
                                     referrerPolicy="no-referrer"
                                   />
-                                  <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-transparent to-transparent opacity-80" />
+                                  <div className="absolute inset-0 bg-gradient-to-t from-slate-900/60 via-transparent to-transparent opacity-80" />
+                                  
+                                  {/* PC Version Content (Overlay) */}
+                                  <div className="hidden lg:flex absolute inset-0 p-8 flex-col justify-end">
+                                    <span className="px-3 py-1 bg-white/20 backdrop-blur-md rounded-full text-[10px] font-black text-white uppercase tracking-widest mb-4 w-fit">Short-form</span>
+                                    <h4 className="text-xl font-black text-white mb-2 tracking-tight break-keep">{videoCases[3].title}</h4>
+                                  </div>
+
                                   <div className="absolute inset-0 flex items-center justify-center">
                                     <div className="w-16 h-16 rounded-full bg-white/10 backdrop-blur-md border border-white/20 flex items-center justify-center group-hover:scale-110 transition-transform duration-500">
                                       <Play fill="white" className="text-white ml-1" size={24} />
                                     </div>
                                   </div>
-                                  <div className="absolute bottom-8 left-8 right-8">
-                                    <span className="px-3 py-1 bg-white/20 backdrop-blur-md rounded-full text-[10px] font-black text-white uppercase tracking-widest mb-3 inline-block">Short-form</span>
-                                    <h4 className="text-xl font-black text-white mb-2 tracking-tight">{videoCases[3].title}</h4>
-                                  </div>
                                 </div>
                                 <a href={videoCases[3].url} target="_blank" rel="noopener noreferrer" className="absolute inset-0 z-10" />
                               </motion.div>
+
+                              {/* Mobile Version Content (Separate) */}
+                              <div className="lg:hidden px-6">
+                                <span className="px-3 py-1 bg-slate-100 rounded-full text-[10px] font-black text-slate-400 uppercase tracking-widest mb-3 inline-block">Short-form</span>
+                                <h4 className="text-lg font-black text-slate-900 mb-2 tracking-tight break-keep">{videoCases[3].title}</h4>
+                              </div>
                             </div>
 
-                            <div className="lg:col-span-8 flex flex-col gap-8 order-1 lg:order-2">
+                            <div className="lg:col-span-8 flex flex-col gap-6 order-1 lg:order-2">
                               <motion.div 
                                 whileHover={{ scale: 0.98 }}
                                 className="group relative bg-slate-900 rounded-[40px] overflow-hidden shadow-2xl"
@@ -991,22 +1321,31 @@ export default function Portfolio() {
                                   <img 
                                     src={videoCases[1].thumbnail} 
                                     alt={videoCases[1].title}
-                                    className="w-full h-full object-cover opacity-60 group-hover:scale-105 transition-transform duration-1000"
+                                    className="w-full h-full object-cover opacity-80 group-hover:scale-105 transition-transform duration-1000"
                                     referrerPolicy="no-referrer"
                                   />
-                                  <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-transparent to-transparent opacity-80" />
+                                  <div className="absolute inset-0 bg-gradient-to-t from-slate-900/60 via-transparent to-transparent opacity-80" />
+                                  
+                                  {/* PC Version Content (Overlay) */}
+                                  <div className="hidden lg:flex absolute inset-0 p-10 flex-col justify-end">
+                                    <span className="px-3 py-1 bg-white/20 backdrop-blur-md rounded-full text-[10px] font-black text-white uppercase tracking-widest mb-4 w-fit">Long-form</span>
+                                    <h4 className="text-3xl font-black text-white mb-2 tracking-tight break-keep">{videoCases[1].title}</h4>
+                                  </div>
+
                                   <div className="absolute inset-0 flex items-center justify-center">
                                     <div className="w-20 h-20 rounded-full bg-white/10 backdrop-blur-md border border-white/20 flex items-center justify-center group-hover:scale-110 transition-transform duration-500">
                                       <Play fill="white" className="text-white ml-1" size={32} />
                                     </div>
                                   </div>
-                                  <div className="absolute bottom-8 left-8 right-8">
-                                    <span className="px-3 py-1 bg-white/20 backdrop-blur-md rounded-full text-[10px] font-black text-white uppercase tracking-widest mb-3 inline-block">Long-form</span>
-                                    <h4 className="text-2xl lg:text-3xl font-black text-white mb-2 tracking-tight">{videoCases[1].title}</h4>
-                                  </div>
                                 </div>
                                 <a href={videoCases[1].url} target="_blank" rel="noopener noreferrer" className="absolute inset-0 z-10" />
                               </motion.div>
+
+                              {/* Mobile Version Content (Separate) */}
+                              <div className="lg:hidden px-6">
+                                <span className="px-3 py-1 bg-slate-100 rounded-full text-[10px] font-black text-slate-400 uppercase tracking-widest mb-3 inline-block">Long-form</span>
+                                <h4 className="text-xl font-black text-slate-900 mb-2 tracking-tight break-keep">{videoCases[1].title}</h4>
+                              </div>
 
                               {/* Insight Card 2 */}
                               <motion.div 
@@ -1021,7 +1360,7 @@ export default function Portfolio() {
                                     </div>
                                     <span className="text-xs font-black text-white/40 uppercase tracking-[0.2em]">Director's Insight</span>
                                   </div>
-                                  <p className="text-lg lg:text-xl font-bold text-white leading-[1.8] whitespace-pre-line tracking-tight">
+                                  <p className="text-lg lg:text-xl font-bold text-white leading-[1.8] whitespace-pre-line tracking-tight break-keep">
                                     {videoCases[1].insight}
                                   </p>
                                 </div>
@@ -1031,53 +1370,6 @@ export default function Portfolio() {
                               </motion.div>
                             </div>
                           </div>
-                        </div>
-                      ) : selectedTouchpoint.id === 'blog' ? (
-                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                          {blogCases.map((caseItem) => (
-                            <motion.div 
-                              key={caseItem.id}
-                              whileHover={{ y: -10 }}
-                              className="group bg-white rounded-[40px] overflow-hidden border border-slate-100 shadow-xl shadow-slate-200/20 flex flex-col"
-                            >
-                              <div className="relative aspect-[16/10] overflow-hidden">
-                                <img 
-                                  src={caseItem.image} 
-                                  alt={caseItem.title}
-                                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
-                                  referrerPolicy="no-referrer"
-                                />
-                                <div className="absolute top-4 left-4">
-                                  <span className={`px-4 py-1.5 rounded-full bg-white/90 backdrop-blur-md text-[10px] font-black ${selectedTouchpoint.color} uppercase tracking-widest shadow-sm`}>
-                                    {caseItem.platform}
-                                  </span>
-                                </div>
-                              </div>
-                              <div className="p-8 flex-1 flex flex-col">
-                                <h4 className="text-xl font-black text-slate-900 mb-3 leading-tight group-hover:text-rose-500 transition-colors">
-                                  {caseItem.title}
-                                </h4>
-                                <p className="text-sm font-bold text-slate-500 leading-relaxed mb-6 flex-1">
-                                  {caseItem.desc}
-                                </p>
-                                <div className="flex flex-wrap gap-2 mb-8">
-                                  {caseItem.tags.map((tag, tIdx) => (
-                                    <span key={tIdx} className="text-[10px] font-black text-slate-400 uppercase tracking-widest">
-                                      #{tag}
-                                    </span>
-                                  ))}
-                                </div>
-                                <a 
-                                  href={caseItem.url}
-                                  target="_blank"
-                                  rel="noopener noreferrer"
-                                  className="w-full py-4 bg-slate-50 rounded-2xl flex items-center justify-center gap-2 text-slate-900 font-black text-xs group-hover:bg-rose-500 group-hover:text-white transition-all"
-                                >
-                                  콘텐츠 보러가기 <ArrowUpRight size={14} />
-                                </a>
-                              </div>
-                            </motion.div>
-                          ))}
                         </div>
                       ) : selectedTouchpoint.id === 'website' ? (
                         <div className="space-y-32">
@@ -1150,17 +1442,64 @@ export default function Portfolio() {
                             </div>
                           ))}
                         </div>
+                      ) : selectedTouchpoint.id === 'blog' ? (
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                          {blogCases.map((caseItem) => (
+                            <motion.div 
+                              key={caseItem.id}
+                              whileHover={{ y: -10 }}
+                              className="group bg-white rounded-[40px] overflow-hidden border border-slate-100 shadow-xl shadow-slate-200/20 flex flex-col"
+                            >
+                              <div className="relative aspect-[16/10] overflow-hidden">
+                                <img 
+                                  src={caseItem.image} 
+                                  alt={caseItem.title}
+                                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                                  referrerPolicy="no-referrer"
+                                />
+                                <div className="absolute top-4 left-4">
+                                  <span className={`px-4 py-1.5 rounded-full bg-white/90 backdrop-blur-md text-[10px] font-black ${selectedTouchpoint.color} uppercase tracking-widest shadow-sm`}>
+                                    {caseItem.platform}
+                                  </span>
+                                </div>
+                              </div>
+                              <div className="p-8 flex-1 flex flex-col">
+                                <h4 className="text-xl font-black text-slate-900 mb-3 leading-tight group-hover:text-rose-500 transition-colors break-keep">
+                                  {caseItem.title}
+                                </h4>
+                                <p className="text-sm font-bold text-slate-500 leading-relaxed mb-6 flex-1 break-keep">
+                                  {caseItem.desc}
+                                </p>
+                                <div className="flex flex-wrap gap-2 mb-8">
+                                  {caseItem.tags.map((tag, tIdx) => (
+                                    <span key={tIdx} className="text-[10px] font-black text-slate-400 uppercase tracking-widest">
+                                      #{tag}
+                                    </span>
+                                  ))}
+                                </div>
+                                <a 
+                                  href={caseItem.url}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="w-full py-4 bg-slate-50 rounded-2xl flex items-center justify-center gap-2 text-slate-900 font-black text-xs group-hover:bg-rose-500 group-hover:text-white transition-all"
+                                >
+                                  콘텐츠 보러가기 <ArrowUpRight size={14} />
+                                </a>
+                              </div>
+                            </motion.div>
+                          ))}
+                        </div>
                       ) : selectedTouchpoint.id === 'place' ? (
                         <div className="space-y-24">
                           {placeCases.map((caseItem) => (
-                            <div key={caseItem.id} className="grid grid-cols-1 lg:grid-cols-12 gap-16 items-stretch">
+                            <div key={caseItem.id} className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-16 items-stretch">
                               {/* Left: Place Capture & Hotspots */}
                               <div className="lg:col-span-7 flex flex-col">
-                                <div className="relative group rounded-[40px] overflow-hidden border-8 border-slate-100 shadow-2xl bg-slate-50 flex-grow">
+                                <div className="relative group rounded-[32px] lg:rounded-[40px] overflow-hidden border-4 lg:border-8 border-slate-100 shadow-2xl bg-slate-50 h-[600px] lg:h-full lg:flex-grow">
                                   <img 
                                     src={caseItem.image} 
                                     alt={caseItem.title}
-                                    className="w-full h-full object-cover opacity-90 group-hover:opacity-100 transition-opacity duration-700"
+                                    className="w-full h-full object-cover object-top opacity-90 group-hover:opacity-100 transition-opacity duration-700"
                                     referrerPolicy="no-referrer"
                                   />
                                   {/* Hotspots */}
@@ -1187,8 +1526,8 @@ export default function Portfolio() {
                                       </div>
                                     </motion.div>
                                   ))}
-                                  {/* Link Overlay */}
-                                  <div className="absolute bottom-8 left-1/2 -translate-x-1/2">
+                                  {/* Link Overlay - Desktop Only */}
+                                  <div className="hidden lg:block absolute bottom-8 left-1/2 -translate-x-1/2">
                                     <a 
                                       href={caseItem.url} 
                                       target="_blank" 
@@ -1199,13 +1538,24 @@ export default function Portfolio() {
                                     </a>
                                   </div>
                                 </div>
+                                {/* Link Overlay - Mobile Only (Below Image) */}
+                                <div className="lg:hidden mt-6">
+                                  <a 
+                                    href={caseItem.url} 
+                                    target="_blank" 
+                                    rel="noopener noreferrer"
+                                    className="w-full flex items-center justify-center gap-2 p-5 bg-blue-600 rounded-2xl text-white font-black text-base shadow-xl active:scale-95 transition-all"
+                                  >
+                                    실제 플레이스 확인하기 <ArrowUpRight size={18} />
+                                  </a>
+                                </div>
                               </div>
 
                               {/* Right: Analysis & Solution */}
                               <div className="lg:col-span-5 space-y-10">
                                 {/* 1. Scorecard */}
                                 <div className="p-8 bg-slate-50 rounded-[40px] border border-slate-100">
-                                  <h5 className="text-xs font-black text-slate-400 uppercase tracking-widest mb-6">Diagnostic Scorecard</h5>
+                                  <h5 className="text-[11px] font-black text-slate-400 uppercase tracking-widest mb-6 break-keep">Diagnostic Scorecard</h5>
                                   <div className="grid grid-cols-2 gap-x-8 gap-y-6">
                                     {caseItem.scores.map((s, idx) => (
                                       <div key={idx} className="space-y-2">
@@ -1231,7 +1581,7 @@ export default function Portfolio() {
 
                                 {/* 2. Solution List */}
                                 <div className="space-y-6">
-                                  <h5 className="text-xs font-black text-indigo-600 uppercase tracking-widest">
+                                  <h5 className="text-xs font-black text-indigo-600 uppercase tracking-widest break-keep">
                                     {['place-audit-01', 'place-audit-02', 'place-audit-03'].includes(caseItem.id) ? 'DETAILED ANALYSIS' : 'Core Solution'}
                                   </h5>
                                   <div className="space-y-4">
@@ -1241,8 +1591,8 @@ export default function Portfolio() {
                                           {sol.id}
                                         </div>
                                         <div>
-                                          <p className="font-black text-slate-900 text-sm mb-1">{sol.title}</p>
-                                          <p className="text-xs text-slate-500 font-bold leading-relaxed whitespace-pre-line">{sol.desc}</p>
+                                          <p className="font-black text-slate-900 text-sm mb-1 break-keep">{sol.title}</p>
+                                          <p className="text-xs text-slate-500 font-bold leading-relaxed whitespace-pre-line break-keep">{sol.desc}</p>
                                         </div>
                                       </div>
                                     ))}
@@ -1301,7 +1651,7 @@ export default function Portfolio() {
                             <div key={caseItem.id} className="bg-white rounded-[40px] p-8 md:p-16 border border-slate-100 shadow-sm overflow-hidden">
                               <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-stretch">
                                 {/* Left: Diagram */}
-                                <div className="relative h-full w-full bg-slate-50 rounded-[40px] flex items-center justify-center overflow-hidden border border-slate-100 shadow-inner min-h-[500px] lg:min-h-0">
+                                <div className="relative h-full w-full bg-slate-50 rounded-[24px] md:rounded-[40px] flex items-center justify-center overflow-hidden border border-slate-100 shadow-inner min-h-[500px] lg:min-h-0 order-2 lg:order-1">
                                   {/* Blueprint Grid Background */}
                                   <div className="absolute inset-0 opacity-[0.04] pointer-events-none" 
                                     style={{ 
@@ -1317,18 +1667,18 @@ export default function Portfolio() {
                                   />
 
                                   {caseItem.id === 'case01' && (
-                                    <div className="relative w-full h-full flex flex-col items-center justify-center p-8 md:p-12 lg:p-14">
-                                      <div className="w-full max-w-lg space-y-8 lg:space-y-10">
+                                    <div className="relative w-full h-full flex flex-col items-center justify-center p-8">
+                                      {/* PC Funnel (Hidden on Mobile) */}
+                                      <div className="hidden lg:flex w-full max-w-lg flex-col space-y-10">
                                         <div className="flex items-center justify-between">
-                                          <span className="text-[11px] lg:text-[12px] font-black text-slate-400 uppercase tracking-widest">전환 퍼널 분석 (Conversion Funnel)</span>
+                                          <span className="text-[12px] font-black text-slate-400 uppercase tracking-widest">전환 퍼널 분석 (Conversion Funnel)</span>
                                           <div className="flex items-center gap-2">
-                                            <div className="w-2.5 h-2.5 lg:w-3 lg:h-3 rounded-full bg-rose-500 animate-pulse" />
-                                            <span className="text-[11px] lg:text-[12px] font-black text-rose-500 uppercase">심각한 이탈 구간</span>
+                                            <div className="w-3 h-3 rounded-full bg-rose-500 animate-pulse" />
+                                            <span className="text-[12px] font-black text-rose-500 uppercase">심각한 이탈 구간</span>
                                           </div>
                                         </div>
 
-                                        {/* Funnel Visualization - Improved Layout */}
-                                        <div className="space-y-4 lg:space-y-6">
+                                        <div className="space-y-6">
                                           {[
                                             { label: "고객 유입", value: "100%", width: "100%", color: "bg-slate-200" },
                                             { label: "브랜드 관심", value: "35%", width: "35%", color: "bg-slate-300" },
@@ -1336,60 +1686,67 @@ export default function Portfolio() {
                                             { label: "최종 전환", value: "1.2%", width: "5%", color: "bg-slate-400" }
                                           ].map((row, i) => (
                                             <div key={i} className="group relative">
-                                              <div className="flex items-center justify-between mb-1.5 lg:mb-2 px-1">
-                                                <span className="text-[11px] lg:text-[12px] font-black text-slate-500">{row.label}</span>
-                                                <span className="text-[11px] lg:text-[12px] font-black text-slate-900">{row.value}</span>
+                                              <div className="flex items-center justify-between mb-2 px-1">
+                                                <span className="text-[12px] font-black text-slate-500">{row.label}</span>
+                                                <span className="text-[12px] font-black text-slate-900">{row.value}</span>
                                               </div>
-                                              <div className="h-4 lg:h-6 bg-slate-50 rounded-full overflow-hidden border border-slate-100">
+                                              <div className="h-6 bg-slate-50 rounded-full overflow-hidden border border-slate-100">
                                                 <motion.div 
                                                   initial={{ width: 0 }}
                                                   whileInView={{ width: row.width }}
-                                                  transition={{ duration: 1.2, delay: i * 0.1, ease: "easeOut" }}
+                                                  transition={{ duration: 1.2, delay: i * 0.1 }}
                                                   className={`h-full ${row.color} rounded-full relative`}
-                                                >
-                                                  {row.alert && (
-                                                    <motion.div 
-                                                      animate={{ x: [0, 5, 0] }}
-                                                      transition={{ duration: 1.5, repeat: Infinity }}
-                                                      className="absolute -right-28 lg:-right-32 top-1/2 -translate-y-1/2 flex items-center gap-2"
-                                                    >
-                                                      <ArrowRight className="w-3.5 h-3.5 lg:w-4 lg:h-4 text-rose-500" />
-                                                      <span className="text-[10px] lg:text-[11px] font-black text-rose-500 whitespace-nowrap">신뢰 부족으로 인한 이탈</span>
-                                                    </motion.div>
-                                                  )}
-                                                </motion.div>
+                                                />
                                               </div>
                                             </div>
                                           ))}
                                         </div>
+                                      </div>
 
-                                        {/* Strategy Insight - Localized */}
-                                        <div className="p-6 lg:p-8 bg-white border-2 border-slate-100 rounded-[32px] lg:rounded-[40px] shadow-xl shadow-slate-200/20">
-                                          <div className="flex items-center gap-3 lg:gap-4 mb-3 lg:mb-4">
-                                            <div className="w-8 h-8 lg:w-10 lg:h-10 rounded-xl lg:rounded-2xl bg-amber-400 flex items-center justify-center text-white shadow-lg shadow-amber-400/30">
-                                              <Zap className="w-[18px] h-[18px] lg:w-[22px] lg:h-[22px]" fill="currentColor" />
-                                            </div>
-                                            <span className="text-sm lg:text-base font-black text-slate-900 tracking-tight">전략적 솔루션 (Solution)</span>
+                                      {/* Mobile Simplified Funnel (Visible on Mobile) */}
+                                      <div className="lg:hidden w-full space-y-8 flex flex-col items-center">
+                                        <span className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-4">Conversion Boost</span>
+                                        <div className="relative flex flex-col items-center gap-4 w-full">
+                                          <div className="w-full h-16 bg-slate-100 rounded-2xl flex items-center justify-center border border-slate-200">
+                                            <span className="text-slate-400 font-bold text-sm">기존: 낮은 신뢰로 최종 이탈</span>
                                           </div>
-                                          <p className="text-[13px] lg:text-[14px] text-slate-600 font-bold leading-relaxed break-keep">
-                                            고객이 망설이는 <span className="text-rose-500 underline underline-offset-4 decoration-2">구매 결심 단계</span>에서 강력한 신뢰 장치를 배치합니다. 
-                                            이탈을 막고 최종 전환율을 <span className="text-indigo-600 font-black">2.5배 이상 끌어올리는</span> 최적의 동선을 설계합니다.
-                                          </p>
+                                          <ArrowDown className="text-brand-primary animate-bounce" size={20} />
+                                          <div className="w-full p-6 bg-brand-primary rounded-3xl shadow-xl shadow-brand-primary/20 flex flex-col items-center gap-2">
+                                            <span className="text-white/60 text-[10px] font-black tracking-widest">BRAND ONE 솔루션</span>
+                                            <span className="text-white font-black text-xl break-keep text-center">전환율 2.5배 상승</span>
+                                          </div>
                                         </div>
+                                      </div>
+
+                                      {/* Strategy Insight */}
+                                      <div className="mt-12 lg:mt-10 p-6 lg:p-8 bg-white border-2 border-slate-100 rounded-[32px] lg:rounded-[40px] shadow-xl shadow-slate-200/20 w-full max-w-lg">
+                                        <div className="flex items-center gap-3 lg:gap-4 mb-3 lg:mb-4">
+                                          <div className="w-8 h-8 lg:w-10 lg:h-10 rounded-xl lg:rounded-2xl bg-amber-400 flex items-center justify-center text-white shadow-lg shadow-amber-400/30">
+                                            <Zap className="w-[18px] h-[18px] lg:w-[22px] lg:h-[22px]" fill="currentColor" />
+                                          </div>
+                                          <span className="text-sm lg:text-base font-black text-slate-900 tracking-tight break-keep">핵심 전략 리포트</span>
+                                        </div>
+                                        <p className="text-[13px] lg:text-[14px] text-slate-600 font-bold leading-[1.8] break-keep">
+                                          구매 결심 단계의 <span className="text-rose-500 underline underline-offset-4 decoration-2 inline-block">심리적 이탈</span>을 <br className="lg:hidden" />
+                                          강력한 신뢰 장치로 차단하여 <br className="lg:hidden" />
+                                          <span className="text-indigo-600 font-black inline-block">실질 매출</span>로 연결되는 <br className="lg:hidden" />
+                                          최적의 동선을 구축했습니다.
+                                        </p>
                                       </div>
                                     </div>
                                   )}
 
                                   {caseItem.id === 'case02' && (
-                                    <div className="relative w-full h-full flex flex-col items-center justify-center p-8 md:p-12 lg:p-14">
-                                      <div className="w-full h-full max-w-lg flex flex-col">
+                                    <div className="relative w-full h-full flex flex-col items-center justify-center p-8">
+                                      {/* PC Position Map (Hidden on Mobile) */}
+                                      <div className="hidden lg:flex w-full h-full max-w-lg flex-col">
                                         <div className="flex items-center justify-between mb-10 lg:mb-14">
                                           <span className="text-[11px] lg:text-[12px] font-black text-slate-400 uppercase tracking-widest">시장 포지셔닝 맵 (Positioning Map)</span>
                                           <span className="text-[11px] lg:text-[12px] font-black text-amber-500 uppercase">프리미엄 타겟팅</span>
                                         </div>
 
                                         {/* Quadrant Chart */}
-                                        <div className="flex-1 relative border-l-2 border-b-2 border-slate-300 mb-10 lg:mb-14">
+                                        <div className="flex-1 relative border-l-2 border-b-2 border-slate-300 mb-10 lg:mb-14 h-[300px]">
                                           {/* Axis Labels */}
                                           <div className="absolute -left-2 -top-6 lg:-top-8 text-[9px] lg:text-[10px] font-black text-slate-400 uppercase">높은 가치 (High Value)</div>
                                           <div className="absolute -right-2 -bottom-6 lg:-bottom-8 text-[9px] lg:text-[10px] font-black text-slate-400 uppercase">높은 가격 (High Price)</div>
@@ -1448,29 +1805,126 @@ export default function Portfolio() {
                                             
                                             <div className="flex items-center gap-2 lg:gap-3 mb-1.5 lg:mb-2 relative z-10">
                                               <User className="w-3.5 h-3.5 lg:w-[18px] lg:h-[18px] text-amber-500" />
-                                              <span className="text-[11px] lg:text-[13px] font-black text-slate-900 uppercase">프리미엄 페르소나</span>
+                                              <span className="text-[11px] lg:text-[13px] font-black text-slate-900 uppercase break-keep">프리미엄 페르소나</span>
                                             </div>
-                                            <p className="text-[10px] lg:text-[11px] font-bold text-slate-500 leading-tight relative z-10">고관여 우량 고객 <br /> 집중 타겟팅 완료</p>
+                                            <p className="text-[10px] lg:text-[11px] font-bold text-slate-500 leading-tight relative z-10 break-keep">고관여 우량 고객 <br /> 집중 타겟팅 완료</p>
                                           </motion.div>
                                         </div>
 
                                         <div className="grid grid-cols-2 gap-4 lg:gap-6">
                                           <div className="p-4 lg:p-5 bg-slate-100 rounded-2xl lg:rounded-3xl">
                                             <p className="text-[9px] lg:text-[10px] font-black text-slate-400 uppercase mb-1">현재 상태</p>
-                                            <p className="text-xs lg:text-sm font-black text-slate-600">저가 경쟁 레드오션</p>
+                                            <p className="text-xs lg:text-sm font-black text-slate-600 break-keep">저가 경쟁 레드오션</p>
                                           </div>
                                           <div className="p-4 lg:p-5 bg-amber-50 border border-amber-100 rounded-2xl lg:rounded-3xl">
                                             <p className="text-[9px] lg:text-[10px] font-black text-amber-400 uppercase mb-1">전략 실행 후</p>
-                                            <p className="text-xs lg:text-sm font-black text-amber-600">독보적 가치 포지셔닝</p>
+                                            <p className="text-xs lg:text-sm font-black text-amber-600 break-keep">독보적 가치 포지셔닝</p>
                                           </div>
+                                        </div>
+                                      </div>
+
+                                      {/* Mobile Simplified Map (Visible on Mobile) */}
+                                      <div className="lg:hidden w-full flex flex-col items-center">
+                                        <span className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-8">Premium Positioning Map</span>
+                                        
+                                        <div className="relative w-full max-w-[280px] aspect-square border-l-2 border-b-2 border-slate-200 mb-8">
+                                          {/* Axis Labels */}
+                                          <span className="absolute -left-2 top-0 -translate-x-full text-[9px] font-black text-slate-400 uppercase [writing-mode:vertical-lr] rotate-180">High Value</span>
+                                          <span className="absolute -bottom-6 right-0 text-[9px] font-black text-slate-400 uppercase">High Price</span>
+
+                                          {/* Crowded Red Ocean area */}
+                                          <div className="absolute left-[10%] bottom-[10%] w-[40%] h-[40%] bg-slate-100/50 rounded-tr-[40px] border-t border-r border-dashed border-slate-200">
+                                            <span className="absolute bottom-2 left-2 text-[9px] font-black text-slate-300 uppercase">Red Ocean</span>
+                                            <div className="absolute inset-0 flex flex-wrap gap-2 p-4 opacity-30">
+                                              {[...Array(6)].map((_, i) => (
+                                                <div key={i} className="w-2 h-2 rounded-full bg-slate-300" />
+                                              ))}
+                                            </div>
+                                          </div>
+
+                                          {/* Movement Arrow */}
+                                          <svg className="absolute inset-0 w-full h-full overflow-visible pointer-events-none">
+                                            <motion.path 
+                                              d="M 25% 75% Q 40% 40% 75% 25%" 
+                                              fill="none" 
+                                              stroke="#fbbf24" 
+                                              strokeWidth="3" 
+                                              strokeDasharray="6 4"
+                                              initial={{ pathLength: 0 }}
+                                              whileInView={{ pathLength: 1 }}
+                                              transition={{ duration: 1.5, ease: "easeInOut" }}
+                                            />
+                                            <motion.path 
+                                              d="M 75% 25% l -10 2 l 2 -10 z" 
+                                              fill="#fbbf24"
+                                              initial={{ opacity: 0 }}
+                                              whileInView={{ opacity: 1 }}
+                                              transition={{ delay: 1.5 }}
+                                            />
+                                          </svg>
+
+                                          {/* Target Premium Area */}
+                                          <motion.div 
+                                            initial={{ scale: 0, opacity: 0 }}
+                                            whileInView={{ scale: 1, opacity: 1 }}
+                                            transition={{ delay: 1.2, type: "spring" }}
+                                            className="absolute right-[10%] top-[10%] -translate-y-1/2 translate-x-1/2"
+                                          >
+                                            <div className="relative">
+                                              <div className="w-16 h-16 bg-amber-400 rounded-full flex items-center justify-center text-white shadow-xl shadow-amber-400/40 relative z-10 border-4 border-white">
+                                                <Star className="w-8 h-8" fill="currentColor" />
+                                              </div>
+                                              <motion.div 
+                                                animate={{ scale: [1, 1.4, 1], opacity: [0.5, 0, 0.5] }}
+                                                transition={{ duration: 2, repeat: Infinity }}
+                                                className="absolute inset-0 bg-amber-400 rounded-full"
+                                              />
+                                            </div>
+                                          </motion.div>
+
+                                          {/* Brand Label Card */}
+                                          <motion.div 
+                                            initial={{ x: 20, opacity: 0 }}
+                                            whileInView={{ x: 0, opacity: 1 }}
+                                            transition={{ delay: 1.8 }}
+                                            className="absolute right-0 top-0 p-4 bg-white shadow-2xl rounded-2xl border-2 border-amber-400 max-w-[140px]"
+                                          >
+                                            <p className="text-xs font-black text-amber-500 mb-1 break-keep">독보적 가치</p>
+                                            <p className="text-[10px] font-bold text-slate-400 break-keep leading-tight">우량 고객 집중 확보</p>
+                                          </motion.div>
                                         </div>
                                       </div>
                                     </div>
                                   )}
 
                                   {caseItem.id === 'case03' && (
-                                    <div className="relative w-full h-full flex flex-col items-center justify-center p-8 md:p-12 lg:p-14">
-                                      <div className="w-full h-full max-w-lg flex flex-col">
+                                    <div className="relative w-full h-full flex flex-col items-center justify-center p-8">
+                                      {/* Mobile Simplified Radar (Visual Anchor) */}
+                                      <div className="lg:hidden flex flex-col items-center space-y-8 mb-10">
+                                        <span className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">ONE System Integration</span>
+                                        <div className="flex items-center justify-center gap-4">
+                                          <div className="flex flex-col gap-2">
+                                            <div className="w-10 h-10 rounded-xl bg-slate-100 border-2 border-slate-200 border-dashed" />
+                                            <div className="w-10 h-10 rounded-xl bg-slate-100 border-2 border-slate-200 border-dashed" />
+                                          </div>
+                                          <ArrowRight className="text-brand-primary" />
+                                          <motion.div 
+                                            animate={{ scale: [1, 1.1, 1] }}
+                                            transition={{ duration: 2, repeat: Infinity }}
+                                            className="w-24 h-24 rounded-full bg-brand-primary flex items-center justify-center shadow-2xl shadow-brand-primary/30"
+                                          >
+                                            <span className="text-white font-black text-xs break-keep text-center">통합 완료</span>
+                                          </motion.div>
+                                          <ArrowRight className="text-brand-primary rotate-180" />
+                                          <div className="flex flex-col gap-2">
+                                            <div className="w-10 h-10 rounded-xl bg-slate-100 border-2 border-slate-200 border-dashed" />
+                                            <div className="w-10 h-10 rounded-xl bg-slate-100 border-2 border-slate-200 border-dashed" />
+                                          </div>
+                                        </div>
+                                      </div>
+
+                                      {/* PC Radar Chart (Only on Desktop) */}
+                                      <div className="hidden lg:flex w-full h-full max-w-lg flex-col">
                                         <div className="flex items-center justify-between mb-6 lg:mb-8">
                                           <span className="text-[11px] lg:text-[12px] font-black text-slate-400 uppercase tracking-widest">접점 일관성 분석 (Consistency Radar)</span>
                                           <span className="text-[11px] lg:text-[12px] font-black text-indigo-500 uppercase">ONE 통합 시스템</span>
@@ -1530,13 +1984,24 @@ export default function Portfolio() {
                                         <div className="mt-6 lg:mt-8 flex items-center justify-center gap-8 lg:gap-12">
                                           <div className="flex items-center gap-3 lg:gap-4">
                                             <div className="w-4 h-4 lg:w-5 lg:h-5 border border-dashed border-rose-500 bg-rose-500/10" />
-                                            <span className="text-[12px] lg:text-[14px] font-black text-slate-600 uppercase">현재 불일치 상태</span>
+                                            <span className="text-[12px] lg:text-[14px] font-black text-slate-600 uppercase break-keep">현재 불일치 상태</span>
                                           </div>
                                           <div className="flex items-center gap-3 lg:gap-4">
                                             <div className="w-4 h-4 lg:w-5 lg:h-5 border-2 border-indigo-500 bg-indigo-500/10" />
-                                            <span className="text-[12px] lg:text-[14px] font-black text-indigo-600 uppercase">ONE 통합 목표</span>
+                                            <span className="text-[12px] lg:text-[14px] font-black text-indigo-600 uppercase break-keep">ONE 통합 목표</span>
                                           </div>
                                         </div>
+                                      </div>
+
+                                      <div className="p-6 bg-indigo-50 border border-indigo-100 rounded-3xl w-full max-w-lg text-center lg:text-left">
+                                        <div className="flex items-center justify-center lg:justify-start gap-3 mb-3">
+                                          <div className="w-2 h-2 rounded-full bg-indigo-500 animate-ping" />
+                                          <span className="text-xs font-black text-indigo-600 break-keep">인지도 80% 개선</span>
+                                        </div>
+                                        <p className="text-[12px] text-slate-600 font-bold leading-relaxed break-keep">
+                                          흩어져 있던 브랜드의 목소리를 하나로 모아, <br className="lg:hidden" />
+                                          어디서 만나든 동일한 프리미엄 <span className="inline-block">경험을 제공합니다.</span>
+                                        </p>
                                       </div>
                                     </div>
                                   )}
@@ -1545,15 +2010,43 @@ export default function Portfolio() {
                                 </div>
 
                                 {/* Right: Content */}
-                                <div className="space-y-8">
+                                <div className="space-y-8 order-1 lg:order-2">
                                   <div>
-                                    <div className="inline-block px-4 py-1 rounded-full bg-amber-400/10 text-amber-500 text-xs font-black mb-4 uppercase tracking-widest">
-                                      CASE 0{caseIdx + 1}
+                                    <div className="flex flex-wrap items-center gap-2 mb-4">
+                                      <div className="px-3 py-1 rounded-md bg-slate-900/5 text-slate-500 text-[10px] font-black tracking-widest uppercase">
+                                        CASE 0{caseIdx + 1}
+                                      </div>
                                     </div>
-                                    <h4 className="text-3xl md:text-4xl font-black text-slate-900 mb-4 tracking-tighter">
-                                      "{caseItem.type}" <span className="text-slate-400">형</span>
+                                    <h4 className="text-[21px] sm:text-[26px] md:text-4xl font-black text-slate-900 mb-6 tracking-tighter break-keep leading-[1.3] flex flex-nowrap items-baseline overflow-hidden">
+                                      <span className="whitespace-nowrap shrink-0">"{caseItem.type}"</span> 
+                                      <span className="text-slate-300 font-bold ml-1 text-lg md:text-2xl align-baseline whitespace-nowrap shrink-0">형</span>
                                     </h4>
-                                    <div className="p-4 rounded-2xl bg-amber-50 border border-amber-100 mb-6">
+                                    
+                                    {/* Mobile Pain Point Hybrid */}
+                                    <div className="lg:hidden p-6 rounded-[32px] bg-rose-50/50 border border-rose-100/50 mb-6">
+                                      <h5 className="text-[10px] font-black text-rose-500 uppercase tracking-widest mb-4">Diagnostic</h5>
+                                      <div className="space-y-4">
+                                        <p className="text-[13.5px] font-bold text-slate-600 leading-[1.8] break-keep">
+                                          플레이스, 블로그 등 외부 채널을 통해 <br />
+                                          <span className="text-slate-900">고객 유입은 발생하지만,</span> 최종 <br />
+                                          목적지인 홈페이지나 결제 <br />
+                                          페이지에서 고객이 이탈하며 실제 <br />
+                                          <span className="text-slate-900">매출로 연결되지 않습니다.</span>
+                                        </p>
+                                        <div className="pt-4 border-t border-rose-100/30">
+                                          <p className="text-[13.5px] font-black text-rose-600/80 leading-[1.8] break-keep">
+                                            {"->"} 고객이 결심을 굳혀야 할 결정적 <br />
+                                            순간에 '진정성 있는 증거'가 <br />
+                                            부족하거나, 유도하는 메시지가 <br />
+                                            파편화되어 신뢰를 주지 못하기 <br />
+                                            때문입니다.
+                                          </p>
+                                        </div>
+                                      </div>
+                                    </div>
+
+                                    {/* Desktop Target Display */}
+                                    <div className="hidden lg:block p-4 rounded-2xl bg-amber-50 border border-amber-100 mb-6">
                                       <p className="text-sm font-bold text-amber-700">
                                         <span className="opacity-50 mr-2">대상:</span> {caseItem.target}
                                       </p>
@@ -1561,27 +2054,34 @@ export default function Portfolio() {
                                   </div>
 
                                   <div className="space-y-6">
-                                    <div>
-                                      <h5 className="text-xs font-black text-rose-500 uppercase tracking-widest mb-2">Problem</h5>
-                                      <p className="text-slate-600 font-bold leading-relaxed break-keep">{caseItem.problem}</p>
+                                    {/* Desktop Only Details */}
+                                    <div className="hidden lg:block space-y-6">
+                                      <div>
+                                        <h5 className="text-xs font-black text-rose-500 uppercase tracking-widest mb-2">Problem</h5>
+                                        <p className="text-slate-600 font-bold leading-relaxed break-keep">{caseItem.problem}</p>
+                                      </div>
+                                      <div>
+                                        <h5 className="text-xs font-black text-indigo-600 uppercase tracking-widest mb-2">Diagnosis</h5>
+                                        <p className="text-slate-600 font-bold leading-relaxed break-keep">{caseItem.diagnosis}</p>
+                                      </div>
                                     </div>
-                                    <div>
-                                      <h5 className="text-xs font-black text-indigo-600 uppercase tracking-widest mb-2">Diagnosis</h5>
-                                      <p className="text-slate-600 font-bold leading-relaxed break-keep">{caseItem.diagnosis}</p>
-                                    </div>
+
                                     <div className="pt-6 border-t border-slate-100">
-                                      <h5 className="text-lg font-black text-slate-900 mb-4">
-                                        Strategy: <span className="text-amber-400">[{caseItem.strategyTitle}]</span>
+                                      <h5 className="text-lg font-black text-slate-900 mb-4 break-keep">
+                                        Strategy: <br className="md:hidden" />
+                                        <span className="text-amber-400">[{caseItem.strategyTitle}]</span>
                                       </h5>
+                                      
+                                      {/* Simplified Strategy List for Mobile */}
                                       <div className="space-y-4 mb-8">
                                         {caseItem.strategies.map((s, sIdx) => (
-                                          <div key={sIdx} className="flex gap-4">
+                                          <div key={sIdx} className="flex gap-4 items-start">
                                             <div className="w-6 h-6 rounded-full bg-slate-900 text-white flex-shrink-0 flex items-center justify-center text-[10px] font-black">
                                               {sIdx + 1}
                                             </div>
                                             <div>
-                                              <p className="font-black text-slate-900 text-sm mb-1">{s.title}</p>
-                                              <p className="text-xs text-slate-500 font-medium leading-normal">{s.desc}</p>
+                                              <p className="font-black text-slate-900 text-[14px] leading-tight break-keep">{s.title}</p>
+                                              <p className="hidden lg:block text-xs text-slate-500 font-medium leading-normal mt-1">{s.desc}</p>
                                             </div>
                                           </div>
                                         ))}
@@ -1589,11 +2089,11 @@ export default function Portfolio() {
 
                                       {/* Expected Outcome */}
                                       <div className="p-6 rounded-3xl bg-indigo-50 border border-indigo-100 flex items-center justify-between group">
-                                        <div>
+                                        <div className="flex-1">
                                           <p className="text-[10px] font-black text-indigo-400 uppercase tracking-widest mb-1">Expected Outcome</p>
-                                          <p className="text-lg font-black text-indigo-600">{caseItem.result}</p>
+                                          <p className="text-[17px] font-black text-indigo-600 break-keep leading-tight">{caseItem.result}</p>
                                         </div>
-                                        <div className="w-10 h-10 rounded-full bg-white flex items-center justify-center text-indigo-500 shadow-sm group-hover:scale-110 transition-transform">
+                                        <div className="w-10 h-10 rounded-full bg-white flex-shrink-0 flex items-center justify-center text-indigo-500 shadow-sm group-hover:scale-110 transition-transform ml-4">
                                           <Zap size={20} fill="currentColor" />
                                         </div>
                                       </div>
@@ -1705,7 +2205,7 @@ export default function Portfolio() {
                                         {caseItem.category}
                                       </span>
                                       <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">
-                                        Total {["Business Card", "Leaflet"].includes(caseItem.category) ? Math.ceil(caseItem.images.length / 2) : caseItem.images.length} {["Business Card", "Leaflet"].includes(caseItem.category) ? "Sets" : "Items"}
+                                        Total {["Namecard", "Leaflet"].includes(caseItem.category) ? Math.ceil(caseItem.images.length / 2) : caseItem.images.length} {["Namecard", "Leaflet"].includes(caseItem.category) ? "Sets" : "Items"}
                                       </span>
                                     </div>
                                     <h4 className="text-3xl md:text-4xl font-black text-slate-900 mb-4 tracking-tighter">
@@ -1786,8 +2286,8 @@ export default function Portfolio() {
               </p>
             </div>
 
-            <div className="flex flex-wrap justify-center gap-2 md:gap-4">
-              {items.map((item) => {
+            <div className="hidden lg:flex flex-wrap justify-center gap-4">
+              {itemsPC.map((item) => {
                 const isSelected = selectedTouchpoint?.id === item.id;
                 
                 return (
@@ -1801,7 +2301,7 @@ export default function Portfolio() {
                         : 'bg-white border border-slate-100 hover:border-slate-200 hover:shadow-lg'
                     }`}>
                       <div className="w-24 h-24 flex items-center justify-center">
-                        <ServiceCard 
+                        <ServiceCardPC 
                           item={item} 
                           size="icon" 
                           active={isSelected}
@@ -1817,10 +2317,52 @@ export default function Portfolio() {
                     
                     {isSelected && (
                       <motion.div 
-                        layoutId="active-indicator"
+                        layoutId="active-indicator-pc"
                         className="absolute -top-1 -right-1 w-5 h-5 bg-brand-primary rounded-full flex items-center justify-center text-white shadow-lg z-20"
                       >
                         <CheckCircle2 size={12} />
+                      </motion.div>
+                    )}
+                  </motion.div>
+                );
+              })}
+            </div>
+
+            <div className="lg:hidden flex flex-wrap justify-center gap-2">
+              {itemsMobile.map((item) => {
+                const isSelected = selectedTouchpoint?.id === item.id;
+                
+                return (
+                  <motion.div
+                    key={item.id}
+                    className="relative"
+                  >
+                    <div className={`flex flex-col items-center gap-4 p-3 rounded-[32px] transition-all duration-500 ${
+                      isSelected 
+                        ? 'bg-white shadow-lg border-2 border-brand-primary' 
+                        : 'bg-white border border-slate-100'
+                    }`}>
+                      <div className="w-16 h-16 flex items-center justify-center">
+                        <ServiceCardMobile 
+                          item={item} 
+                          size="mini"
+                          active={isSelected}
+                          onClick={() => handleSelectTouchpoint(item)}
+                        />
+                      </div>
+                      <span className={`text-[9px] font-black uppercase tracking-widest ${
+                        isSelected ? 'text-slate-900' : 'text-slate-400'
+                      }`}>
+                        {item.name}
+                      </span>
+                    </div>
+                    
+                    {isSelected && (
+                      <motion.div 
+                        layoutId="active-indicator-mobile"
+                        className="absolute -top-1 -right-1 w-4 h-4 bg-brand-primary rounded-full flex items-center justify-center text-white shadow-lg z-20"
+                      >
+                        <CheckCircle2 size={10} />
                       </motion.div>
                     )}
                   </motion.div>
@@ -1852,28 +2394,35 @@ export default function Portfolio() {
               viewport={{ once: true }}
               className="text-[40px] md:text-[56px] font-black text-white tracking-tighter leading-[1.3] mb-12"
             >
-              당신의 브랜드도 <br />
-              <span className="text-brand-primary">성공적인 연결</span>이 필요하신가요?
+              <div className="hidden md:block">
+                당신의 브랜드도 <br />
+                <span className="text-brand-primary">성공적인 연결</span>이 필요하신가요?
+              </div>
+              <div className="md:hidden">
+                당신의 브랜드도 <br />
+                <span className="text-brand-primary">성공적인 연결</span>이 <br />
+                필요하신가요?
+              </div>
             </motion.h2>
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: 0.2 }}
-              className="flex flex-wrap justify-center gap-4"
+              className="flex flex-col md:flex-row items-center justify-center gap-4"
             >
             <a 
               href="https://open.kakao.com/me/brandone"
               target="_blank"
               rel="noopener noreferrer"
-              className="px-10 py-5 bg-[#FEE500] text-[#3C1E1E] rounded-2xl font-black text-lg shadow-xl shadow-[#FEE500]/20 hover:scale-105 transition-transform flex items-center gap-2"
+              className="w-full max-w-[300px] md:w-auto px-10 py-5 bg-[#FEE500] text-[#3C1E1E] rounded-2xl font-black text-lg shadow-xl shadow-[#FEE500]/20 hover:scale-105 transition-transform flex items-center justify-center gap-2"
             >
               <MessageCircle className="w-5 h-5 fill-current" />
               간편 상담해보기
             </a>
             <Link 
               to="/service#estimate"
-              className="px-10 py-5 bg-[#D9F99D] text-slate-900 rounded-2xl font-black text-lg shadow-xl shadow-[#D9F99D]/20 hover:scale-105 transition-transform flex items-center justify-center"
+              className="w-full max-w-[300px] md:w-auto px-10 py-5 bg-[#D9F99D] text-slate-900 rounded-2xl font-black text-lg shadow-xl shadow-[#D9F99D]/20 hover:scale-105 transition-transform flex items-center justify-center"
             >
               견적 계산해보기
             </Link>
@@ -1910,21 +2459,21 @@ export default function Portfolio() {
               initial={{ opacity: 0, scale: 0.9, y: 20 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.9, y: 20 }}
-              className="relative w-full max-w-6xl max-h-[90vh] bg-white rounded-[48px] overflow-hidden shadow-2xl flex flex-col md:flex-row"
+              className="relative w-full max-w-6xl max-h-[90vh] bg-white rounded-[40px] md:rounded-[48px] overflow-y-auto md:overflow-hidden shadow-2xl flex flex-col md:flex-row"
             >
               {/* Close Button */}
               <button 
                 onClick={() => setSelectedOfflineItem(null)}
-                className="absolute top-8 right-8 w-12 h-12 bg-slate-100 rounded-full flex items-center justify-center text-slate-900 hover:bg-brand-primary hover:text-white transition-all z-50"
+                className="fixed md:absolute top-8 right-8 w-12 h-12 bg-white/90 md:bg-slate-100 backdrop-blur-md rounded-full flex items-center justify-center text-slate-900 hover:bg-brand-primary hover:text-white transition-all z-[70] shadow-lg md:shadow-none"
               >
                 <X size={24} />
               </button>
 
               {/* Left: Image Slider / Flip Card */}
-              <div className={`w-full ${selectedOfflineItem.category === 'X-Banner' ? 'md:w-2/5' : 'md:w-3/5'} h-[400px] md:h-auto bg-slate-50 relative group/slider overflow-hidden`}>
-                {["Business Card", "Leaflet"].includes(selectedOfflineItem.category) ? (
+              <div className={`w-full ${selectedOfflineItem.category === 'X-Banner' ? 'md:w-2/5' : 'md:w-3/5'} h-[500px] md:h-auto bg-slate-50 relative group/slider flex-shrink-0`}>
+                {["Namecard", "Leaflet"].includes(selectedOfflineItem.category) ? (
                   <div className="w-full h-full flex flex-col items-center justify-center p-8 md:p-12">
-                    <div className="relative w-full h-full max-w-[500px] [perspective:1500px]">
+                    <div className="relative w-full h-full max-w-[420px] md:max-w-[500px] [perspective:1500px]">
                       <motion.div
                         animate={{ rotateY: isFlipped ? 180 : 0 }}
                         transition={{ duration: 0.7, type: "spring", stiffness: 200, damping: 25 }}
@@ -1933,34 +2482,51 @@ export default function Portfolio() {
                       >
                         {/* Front */}
                         <div className="absolute inset-0 [backface-visibility:hidden]">
-                          <div className="w-full h-full rounded-3xl overflow-hidden shadow-2xl border border-slate-200 bg-white">
+                          <div className="w-full h-full rounded-2xl md:rounded-3xl overflow-hidden shadow-2xl border border-slate-200 bg-white relative">
                             <img 
                               src={selectedOfflineItem.images[currentImageIndex * 2]} 
                               alt={`${selectedOfflineItem.title} front`}
                               className="w-full h-full object-contain"
                               referrerPolicy="no-referrer"
                             />
-                            <div className="absolute bottom-4 right-4 px-3 py-1 bg-slate-900/10 backdrop-blur-sm rounded-full text-[10px] font-black text-slate-900 uppercase tracking-widest">Front</div>
+                            {/* Desktop Only Label */}
+                            <div className="hidden md:block absolute bottom-4 right-4 px-3 py-1 bg-slate-900/10 backdrop-blur-sm rounded-full text-[10px] font-black text-slate-900 uppercase tracking-widest">Front</div>
                           </div>
                         </div>
                         {/* Back */}
                         <div className="absolute inset-0 [backface-visibility:hidden] [transform:rotateY(180deg)]">
-                          <div className="w-full h-full rounded-3xl overflow-hidden shadow-2xl border border-slate-200 bg-white">
+                          <div className="w-full h-full rounded-2xl md:rounded-3xl overflow-hidden shadow-2xl border border-slate-200 bg-white relative">
                             <img 
                               src={selectedOfflineItem.images[currentImageIndex * 2 + 1]} 
                               alt={`${selectedOfflineItem.title} back`}
                               className="w-full h-full object-contain"
                               referrerPolicy="no-referrer"
                             />
-                            <div className="absolute bottom-4 right-4 px-3 py-1 bg-slate-900/10 backdrop-blur-sm rounded-full text-[10px] font-black text-slate-900 uppercase tracking-widest">Back</div>
+                            {/* Desktop Only Label */}
+                            <div className="hidden md:block absolute bottom-4 right-4 px-3 py-1 bg-slate-900/10 backdrop-blur-sm rounded-full text-[10px] font-black text-slate-900 uppercase tracking-widest">Back</div>
                           </div>
                         </div>
                       </motion.div>
+
+                      {/* Mobile Integrated Toggle UI */}
+                      <div className="md:hidden absolute top-6 left-1/2 -translate-x-1/2 z-20 flex items-center bg-white/90 backdrop-blur-md rounded-full shadow-xl border border-slate-100 overflow-hidden h-9">
+                        <div className="px-3 h-full flex items-center bg-slate-50 border-r border-slate-100 text-[9px] font-black text-slate-400 uppercase tracking-widest leading-none">
+                          {isFlipped ? "Back" : "Front"}
+                        </div>
+                        <button 
+                          onClick={(e) => { e.stopPropagation(); setIsFlipped(!isFlipped); }}
+                          className="px-3 h-full flex items-center gap-1.5 text-[10px] font-black text-brand-primary active:bg-slate-100 transition-colors leading-none"
+                        >
+                          <Zap size={10} fill="currentColor" />
+                          {isFlipped ? "앞면" : "뒷면"} 보기
+                        </button>
+                      </div>
                     </div>
                     
+                    {/* Desktop Only Flip Button */}
                     <button 
                       onClick={() => setIsFlipped(!isFlipped)}
-                      className="mt-8 px-6 py-2 bg-white border border-slate-200 rounded-full text-xs font-black text-slate-900 shadow-sm hover:bg-slate-50 transition-colors flex items-center gap-2"
+                      className="hidden md:flex mt-8 px-6 py-2.5 bg-white border border-slate-200 rounded-full text-xs font-black text-slate-900 shadow-sm hover:bg-slate-50 transition-colors items-center gap-2"
                     >
                       <Zap size={14} className={isFlipped ? "text-brand-primary" : "text-slate-400"} />
                       {isFlipped ? "앞면 보기" : "뒷면 보기"}
@@ -1974,16 +2540,16 @@ export default function Portfolio() {
                       animate={{ opacity: 1, x: 0 }}
                       exit={{ opacity: 0, x: -20 }}
                       transition={{ duration: 0.4, ease: "easeOut" }}
-                      className="w-full h-full flex items-center justify-center p-8 md:p-12"
+                      className="w-full h-full flex items-center justify-center p-4 md:p-12"
                     >
-                      <div className={`w-full h-full rounded-3xl overflow-hidden shadow-2xl border border-slate-200 bg-white ${selectedOfflineItem.category === 'X-Banner' ? 'max-w-[300px]' : ''}`}>
-                        <img 
-                          src={selectedOfflineItem.images[currentImageIndex]} 
-                          alt={`${selectedOfflineItem.title} detail ${currentImageIndex + 1}`}
-                          className="w-full h-full object-contain"
-                          referrerPolicy="no-referrer"
-                        />
-                      </div>
+                        <div className={`w-full h-full rounded-2xl md:rounded-3xl overflow-hidden shadow-2xl border border-slate-200 bg-white ${selectedOfflineItem.category === 'X-Banner' ? 'max-w-[280px] md:max-w-[300px]' : ''}`}>
+                          <img 
+                            src={selectedOfflineItem.images[currentImageIndex]} 
+                            alt={`${selectedOfflineItem.title} detail ${currentImageIndex + 1}`}
+                            className="w-full h-full object-contain"
+                            referrerPolicy="no-referrer"
+                          />
+                        </div>
                     </motion.div>
                   </AnimatePresence>
                 )}
@@ -1993,19 +2559,19 @@ export default function Portfolio() {
                   <>
                     <button 
                       onClick={prevImage}
-                      className="absolute left-6 top-1/2 -translate-y-1/2 w-12 h-12 bg-white/80 backdrop-blur-md rounded-full flex items-center justify-center text-slate-900 shadow-lg hover:bg-brand-primary hover:text-white transition-all opacity-0 group-hover/slider:opacity-100"
+                      className="absolute left-6 bottom-6 md:top-1/2 md:-translate-y-1/2 md:left-6 w-10 h-10 md:w-12 md:h-12 bg-white/80 backdrop-blur-md rounded-full flex items-center justify-center text-slate-900 shadow-lg hover:bg-brand-primary hover:text-white transition-all opacity-100 md:opacity-0 md:group-hover/slider:opacity-100 z-20"
                     >
-                      <ChevronLeft size={24} />
+                      <ChevronLeft size={20} className="md:size-6" />
                     </button>
                     <button 
                       onClick={nextImage}
-                      className="absolute right-6 top-1/2 -translate-y-1/2 w-12 h-12 bg-white/80 backdrop-blur-md rounded-full flex items-center justify-center text-slate-900 shadow-lg hover:bg-brand-primary hover:text-white transition-all opacity-0 group-hover/slider:opacity-100"
+                      className="absolute right-6 bottom-6 md:top-1/2 md:-translate-y-1/2 md:right-6 w-10 h-10 md:w-12 md:h-12 bg-white/80 backdrop-blur-md rounded-full flex items-center justify-center text-slate-900 shadow-lg hover:bg-brand-primary hover:text-white transition-all opacity-100 md:opacity-0 md:group-hover/slider:opacity-100 z-20"
                     >
-                      <ChevronRight size={24} />
+                      <ChevronRight size={20} className="md:size-6" />
                     </button>
 
                     {/* Pagination Dots */}
-                    <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex gap-2">
+                    <div className="absolute bottom-10 md:bottom-8 left-1/2 -translate-x-1/2 flex gap-2 z-20">
                       {Array.from({ length: ["Namecard", "Leaflet"].includes(selectedOfflineItem.category) ? Math.ceil(selectedOfflineItem.images.length / 2) : selectedOfflineItem.images.length }).map((_, idx) => (
                         <button
                           key={idx}
@@ -2024,8 +2590,8 @@ export default function Portfolio() {
               </div>
 
               {/* Right: Info */}
-              <div className={`w-full ${selectedOfflineItem.category === 'X-Banner' ? 'md:w-3/5' : 'md:w-2/5'} p-8 md:p-16 flex flex-col justify-between overflow-y-auto`}>
-                <div>
+              <div className={`w-full ${selectedOfflineItem.category === 'X-Banner' ? 'md:w-3/5' : 'md:w-2/5'} p-8 md:p-16 flex flex-col md:justify-between md:overflow-y-auto`}>
+                <div className="space-y-6 md:space-y-8">
                   <div className="flex items-center gap-3 mb-6">
                     <span className="px-4 py-1.5 rounded-full bg-slate-100 text-[10px] font-black text-brand-primary uppercase tracking-widest">
                       {selectedOfflineItem.category}

@@ -9,8 +9,8 @@ export default function Footer({ className = "" }: FooterProps) {
   const isDark = className.includes("bg-black") || className.includes("bg-slate-950") || className.includes("bg-[#020617]");
 
   return (
-    <footer className={`py-20 border-t ${isDark ? "border-white/10 text-slate-400" : "border-slate-100 text-slate-500"} ${className}`}>
-      <div className="max-w-[1400px] mx-auto px-6">
+    <footer className={`py-12 lg:py-20 border-t ${isDark ? "border-white/10 text-slate-400" : "border-slate-100 text-slate-500"} ${className}`}>
+      <div className="max-w-[1400px] mx-auto px-6 lg:px-6">
         <div className="flex flex-col lg:flex-row justify-between gap-16 lg:gap-20">
           {/* Left: Brand & Info */}
           <div className="flex-1 space-y-10">

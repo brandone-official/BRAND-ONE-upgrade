@@ -1,10 +1,10 @@
 import { useState, useRef, useEffect } from "react";
-import { motion, AnimatePresence } from "motion/react";
-import { X, ArrowRight, CheckCircle2, Calculator, Plus, Minus, RotateCcw } from "lucide-react";
+import { motion, AnimatePresence, useInView } from "motion/react";
+import { X, ArrowRight, CheckCircle2, Calculator, Plus, Minus, RotateCcw, ChevronLeft } from "lucide-react";
 import Footer from "../components/Footer";
 import QuickMenu from "../components/QuickMenu";
 
-const items = [
+const itemsPC = [
   { 
     name: "Strategy", 
     type: "star", 
@@ -187,8 +187,9 @@ const items = [
   },
 ];
 
-const ServiceCard = ({ item, size = "normal", onClick }: { item: typeof items[0], size?: "normal" | "mini", onClick?: () => void }) => {
-  const baseScale = size === "mini" ? 0.45 : 1;
+const itemsMobile = JSON.parse(JSON.stringify(itemsPC));
+
+const ServiceCardPC = ({ item, size = "normal", onClick }: { item: any, size?: "normal" | "mini", onClick?: () => void }) => {
   const containerSize = "w-80 h-80";
   const boxSize = "w-80 h-52";
 
@@ -327,8 +328,8 @@ const ServiceCard = ({ item, size = "normal", onClick }: { item: typeof items[0]
 
   return (
     <motion.div 
-      initial={{ filter: "grayscale(100%)", opacity: 0.8, scale: baseScale }}
-      whileHover={{ filter: "grayscale(0%)", opacity: 1, scale: baseScale * 1.1 }}
+      initial={{ filter: "grayscale(100%)", opacity: 0.8, scale: size === "mini" ? 0.45 : 1 }}
+      whileHover={{ filter: "grayscale(0%)", opacity: 1, scale: (size === "mini" ? 0.45 : 1) * 1.1 }}
       transition={{ duration: 0.3, ease: "easeOut" }}
       className="cursor-pointer origin-center"
       onClick={onClick}
@@ -338,11 +339,164 @@ const ServiceCard = ({ item, size = "normal", onClick }: { item: typeof items[0]
   );
 };
 
+const ServiceCardMobile = ({ item, size = "normal", onClick, active = false }: { item: any, size?: "normal" | "mini" | "icon", onClick?: () => void, active?: boolean }) => {
+  const containerSize = "w-80 h-80";
+  const boxSize = "w-80 h-52";
+
+  const renderContent = () => {
+    switch (item.type) {
+      case "star":
+        return (
+          <div className={`relative flex items-center justify-center ${containerSize}`}>
+            <motion.div
+              animate={{ rotate: 360 }}
+              transition={{ duration: 12, repeat: Infinity, ease: "linear" }}
+              className="absolute inset-0 flex items-center justify-center"
+            >
+              {[...Array(12)].map((_, i) => (
+                <div
+                  key={i}
+                  className={`absolute w-1.5 h-full ${item.accentBg}/20`}
+                  style={{ transform: `rotate(${i * 30}deg)` }}
+                />
+              ))}
+            </motion.div>
+            <span className="relative z-10 font-black text-3xl tracking-tighter text-slate-900 uppercase italic">
+              {item.name}
+            </span>
+          </div>
+        );
+      case "orbit":
+        return (
+          <div className={`relative flex items-center justify-center ${containerSize}`}>
+            <div className={`w-56 h-56 rounded-full border-4 ${item.accentBg}/10 flex items-center justify-center`}>
+              <div className={`w-40 h-40 rounded-full ${item.accentBg} flex items-center justify-center text-white font-black text-2xl italic uppercase shadow-2xl`}>
+                {item.name}
+              </div>
+            </div>
+            <motion.div
+              animate={{ rotate: 360 }}
+              transition={{ duration: 5, repeat: Infinity, ease: "linear" }}
+              className="absolute w-64 h-64"
+            >
+              <div className="absolute top-0 left-1/2 -translate-x-1/2 w-8 h-8 bg-amber-300 rounded-full shadow-xl border-4 border-white" />
+            </motion.div>
+          </div>
+        );
+      case "browser":
+        return (
+          <div className={`${boxSize} bg-white border-4 border-slate-100 rounded-3xl overflow-hidden shadow-xl flex flex-col`}>
+            <div className="h-10 bg-slate-50 border-b-2 border-slate-100 flex items-center px-4 gap-2">
+              <div className="w-3 h-3 rounded-full bg-rose-400" />
+              <div className="w-3 h-3 rounded-full bg-amber-400" />
+              <div className="w-3 h-3 rounded-full bg-emerald-400" />
+            </div>
+            <div className="flex-1 flex items-center justify-center p-6 bg-white">
+              <span className={`font-black text-3xl ${item.color} uppercase italic tracking-tighter`}>
+                {item.name}
+              </span>
+              <motion.div
+                animate={{ 
+                  opacity: [1, 0, 1],
+                  scaleY: [1, 1.2, 1]
+                }}
+                transition={{ duration: 0.6, repeat: Infinity }}
+                className={`w-2 h-10 ${item.accentBg} ml-2`}
+              />
+            </div>
+          </div>
+        );
+      case "text":
+        return (
+          <div className={`${boxSize} flex flex-col justify-center gap-4 px-4`}>
+            <div className={`w-full h-3 ${item.accentBg}/10 rounded-full overflow-hidden`}>
+              <motion.div
+                animate={{ x: ["-100%", "100%"] }}
+                transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
+                className={`w-2/3 h-full ${item.accentBg}`}
+              />
+            </div>
+            <span className={`font-black text-5xl ${item.color} uppercase italic tracking-tighter text-center`}>
+              {item.name}
+            </span>
+            <div className={`w-full h-3 ${item.accentBg}/10 rounded-full overflow-hidden`}>
+              <motion.div
+                animate={{ x: ["100%", "-100%"] }}
+                transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
+                className={`w-2/3 h-full ${item.accentBg}`}
+              />
+            </div>
+          </div>
+        );
+      case "play":
+        return (
+          <div className={`relative flex items-center justify-center ${containerSize}`}>
+            <motion.div
+              animate={{ rotate: -360 }}
+              transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+              className="absolute w-72 h-72"
+            >
+              {[...Array(10)].map((_, i) => (
+                <div
+                  key={i}
+                  className="absolute w-6 h-6 bg-slate-900 rounded-full shadow-sm"
+                  style={{
+                    top: "50%",
+                    left: "50%",
+                    transform: `rotate(${i * 36}deg) translate(120px) translate(-50%, -50%)`,
+                  }}
+                />
+              ))}
+            </motion.div>
+            <div className="w-28 h-28 bg-slate-900 rounded-[32px] flex items-center justify-center shadow-2xl z-10">
+              <div className="w-0 h-0 border-t-[14px] border-t-transparent border-l-[24px] border-l-white border-b-[14px] border-b-transparent ml-2" />
+            </div>
+            <span className="absolute bottom-4 font-black text-sm text-slate-900 uppercase tracking-[0.2em] z-10">
+              {item.name}
+            </span>
+          </div>
+        );
+      case "stamp":
+        return (
+          <motion.div
+            animate={{ 
+              scale: [1, 1.03, 1],
+              rotate: [-5, -4, -5]
+            }}
+            transition={{ duration: 0.6, repeat: Infinity, repeatDelay: 2.5 }}
+            className={`${boxSize} border-[6px] border-brand-primary flex items-center justify-center bg-white shadow-[12px_12px_0px_0px_rgba(79,70,229,0.1)]`}
+          >
+            <span className="font-black text-4xl text-brand-primary uppercase italic tracking-tighter">
+              {item.name}
+            </span>
+          </motion.div>
+        );
+      default:
+        return null;
+    }
+  };
+
+  const scale = (size === "mini" ? 0.35 : size === "icon" ? 0.22 : 1) * 0.7;
+
+  return (
+    <div 
+      className="cursor-pointer origin-center transform"
+      style={{ scale }}
+      onClick={onClick}
+    >
+      {renderContent()}
+    </div>
+  );
+};
+
 export default function Service() {
-  const [selectedItem, setSelectedItem] = useState<typeof items[0] | null>(null);
+  const [selectedItem, setSelectedItem] = useState<any>(null);
   const [viewMode, setViewMode] = useState<"guide" | "price">("guide");
   const [expandedPriceIdx, setExpandedPriceIdx] = useState<number | null>(null);
   const calculatorRef = useRef<HTMLDivElement>(null);
+  const modalContainerRef = useRef<HTMLDivElement>(null);
+
+  const isEstimateInView = useInView(calculatorRef, { margin: "-100px 0px -100px 0px" });
 
   const [currentStep, setCurrentStep] = useState(0);
   const [selectedOptions, setSelectedOptions] = useState<Record<string, { price: number; quantity: number }>>({});
@@ -483,6 +637,12 @@ export default function Service() {
     return () => clearTimeout(timer);
   }, [currentStep, activeSubTab]);
 
+  useEffect(() => {
+    if (window.innerWidth < 1024 && modalContainerRef.current) {
+      modalContainerRef.current.scrollTop = 0;
+    }
+  }, [viewMode]);
+
   const scrollToCalculator = () => {
     calculatorRef.current?.scrollIntoView({ behavior: "smooth" });
   };
@@ -535,24 +695,24 @@ export default function Service() {
   };
 
   return (
-    <div className="min-h-screen bg-white pt-40">
-      <div className="max-w-[1400px] mx-auto px-6">
+    <div className="min-h-screen bg-white pt-24 lg:pt-40">
+      <div className="max-w-[1400px] mx-auto px-6 lg:px-6">
         {/* Section Index */}
         <motion.div 
           initial={{ opacity: 0, x: -20 }}
           animate={{ opacity: 1, x: 0 }}
-          className="flex items-center gap-4 mb-12"
+          className="flex items-center gap-4 mb-8 lg:mb-12"
         >
           <span className="text-sm font-bold tracking-widest text-brand-primary">01</span>
           <div className="w-12 h-[1px] bg-brand-primary/30" />
           <span className="text-sm font-bold tracking-widest text-slate-400 uppercase">WHAT DO YOU WANT</span>
         </motion.div>
 
-        <div className="text-center mb-12">
+        <div className="text-center mb-8 lg:mb-12">
           <motion.h2 
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="text-[48px] md:text-[60px] font-black leading-[1.35] tracking-tight text-brand-secondary mb-6"
+            className="text-[32px] md:text-[48px] lg:text-[60px] font-black leading-[1.3] lg:leading-[1.35] tracking-tight text-brand-secondary mb-6"
           >
             <span className="text-brand-primary">어느 접점이 부족하다고</span> <br />
             생각하시나요?
@@ -565,8 +725,8 @@ export default function Service() {
             transition={{ delay: 0.3 }}
             className="flex flex-col items-center gap-3"
           >
-            <p className="text-slate-500 font-bold text-lg tracking-tight">
-              궁금한 접점을 <span className="text-brand-primary underline underline-offset-4 decoration-2">클릭</span>하여 상세 가이드와 가격을 확인해보세요.
+            <p className="text-slate-500 font-bold text-lg tracking-tight text-center">
+              궁금한 접점을 <span className="text-brand-primary underline underline-offset-4 decoration-2">클릭</span>하여<br className="md:hidden" /> 상세 가이드와 가격을<br className="md:hidden" /> 확인해보세요.
             </p>
             <motion.div
               animate={{ y: [0, 5, 0] }}
@@ -580,8 +740,8 @@ export default function Service() {
           </motion.div>
         </div>
 
-        {/* Hexagon Visual */}
-        <div className="relative w-full max-w-[1000px] h-[650px] mx-auto">
+        {/* Hexagon Visual (PC ONLY) */}
+        <div className="hidden lg:block relative w-full max-w-[1000px] h-[650px] mx-auto">
           {/* Hexagon Lines (SVG) */}
           <svg className="absolute inset-0 w-full h-full pointer-events-none" viewBox="0 0 1000 650">
             <path
@@ -600,12 +760,12 @@ export default function Service() {
 
           {/* Hexagon Vertices */}
           {[
-            { x: 500, y: 100, item: items[0] }, // Top: Strategy
-            { x: 760, y: 250, item: items[3] }, // Top Right: Place
-            { x: 760, y: 450, item: items[1] }, // Bottom Right: Website
-            { x: 500, y: 600, item: items[2] }, // Bottom: Blog
-            { x: 240, y: 450, item: items[4] }, // Bottom Left: Video
-            { x: 240, y: 250, item: items[5] }, // Top Left: Offline
+            { x: 500, y: 100, item: itemsPC[0] }, // Top: Strategy
+            { x: 760, y: 250, item: itemsPC[3] }, // Top Right: Place
+            { x: 760, y: 450, item: itemsPC[1] }, // Bottom Right: Website
+            { x: 500, y: 600, item: itemsPC[2] }, // Bottom: Blog
+            { x: 240, y: 450, item: itemsPC[4] }, // Bottom Left: Video
+            { x: 240, y: 250, item: itemsPC[5] }, // Top Left: Offline
           ].map((pt, idx) => (
             <div
               key={idx}
@@ -617,7 +777,7 @@ export default function Service() {
               }}
             >
               <div className="relative">
-                <ServiceCard 
+                <ServiceCardPC 
                   item={pt.item} 
                   size="mini" 
                   onClick={() => setSelectedItem(pt.item)}
@@ -627,16 +787,46 @@ export default function Service() {
           ))}
         </div>
 
+        {/* Mobile Layout (MOBILE ONLY) */}
+        <div className="lg:hidden flex flex-col gap-8 mb-20 px-4">
+          <div className="grid grid-cols-1 gap-6">
+            {itemsMobile.map((item, idx) => {
+              const isActive = selectedItem?.name === item.name;
+              return (
+                <motion.div
+                  key={idx}
+                  initial={{ opacity: 0, x: -20 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  transition={{ delay: idx * 0.1 }}
+                  className={`p-6 rounded-[32px] border ${isActive ? 'bg-indigo-50 border-indigo-200' : 'bg-white border-slate-100'} flex items-center gap-6 shadow-sm`}
+                  onClick={() => setSelectedItem(item)}
+                >
+                  <div className="w-20 h-20 flex-shrink-0 flex items-center justify-center">
+                    <ServiceCardMobile item={item} size="mini" active={isActive} />
+                  </div>
+                  <div>
+                    <h3 className="text-xl font-black text-slate-900 mb-1">{item.title}</h3>
+                    <p className="text-xs font-bold text-slate-500 leading-tight">{item.subTitle}</p>
+                  </div>
+                  <div className="ml-auto">
+                    <ArrowRight size={20} className={isActive ? 'text-indigo-600' : 'text-slate-300'} />
+                  </div>
+                </motion.div>
+              );
+            })}
+          </div>
+        </div>
+
         {/* Philosophical Pause Section */}
         <motion.section
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
           viewport={{ once: true }}
           transition={{ duration: 1.5 }}
-          className="py-80 text-center px-6"
+          className="py-32 lg:py-80 text-center px-6"
         >
           <div className="max-w-4xl mx-auto">
-            <h2 className="text-[40px] md:text-[52px] font-black text-slate-900 leading-[1.3] tracking-tighter mb-16 break-keep">
+            <h2 className="text-[32px] md:text-[52px] font-black text-slate-900 leading-[1.3] tracking-tighter mb-16 break-keep">
               지속 가능한 성장은 <br />
               파편화된 정보가 아닌, <br />
               <span className="text-brand-primary">정교한 연결로부터 시작됩니다.</span>
@@ -647,7 +837,8 @@ export default function Service() {
             <div className="flex flex-col items-center gap-12">
               <p className="text-slate-500 font-bold text-lg tracking-tight break-keep">
                 확인하신 가이드와 가격을 바탕으로, <br />
-                당신만의 <span className="text-brand-primary underline underline-offset-4 decoration-2">브랜드 빌드업</span>을 지금 시작해 보세요.
+                당신만의 <span className="text-brand-primary underline underline-offset-4 decoration-2">브랜드 빌드업</span>을 <br />
+                지금 시작해 보세요.
               </p>
 
               {/* Natural Flow Indicator */}
@@ -667,13 +858,13 @@ export default function Service() {
       </div>
 
       {/* Build Your Brand Section */}
-      <section id="estimate" ref={calculatorRef} className="py-32 bg-[#020617] text-white overflow-hidden w-full">
-        <div className="max-w-[1400px] mx-auto px-6">
+      <section id="estimate" ref={calculatorRef} className="py-20 lg:py-32 bg-[#020617] text-white overflow-hidden w-full relative">
+        <div className="max-w-[1400px] mx-auto px-4 lg:px-6">
           <motion.div 
             initial={{ opacity: 0, x: -20 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
-            className="flex items-center gap-4 mb-12"
+            className="flex items-center gap-4 mb-8 lg:mb-12"
           >
             <span className="text-sm font-bold tracking-widest text-[#D9F99D]">02</span>
             <div className="w-12 h-[1px] bg-[#D9F99D]/30" />
@@ -682,10 +873,10 @@ export default function Service() {
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
             {/* Left: Step-by-Step Selection Area */}
-            <div className="space-y-10">
+            <div className="space-y-6 lg:space-y-10">
               <div className="space-y-4">
                 <div className="flex items-center gap-4">
-                  <span className="text-[#D9F99D] font-black text-lg">STEP {currentStep + 1} / {categories.length}</span>
+                  <span className="text-[#D9F99D] font-black text-sm lg:text-lg">STEP {currentStep + 1} / {categories.length}</span>
                   <div className="flex-1 h-[2px] bg-white/10 rounded-full overflow-hidden">
                     <motion.div 
                       initial={{ width: 0 }}
@@ -694,9 +885,9 @@ export default function Service() {
                     />
                   </div>
                 </div>
-                <h2 className="text-[32px] md:text-[44px] font-black tracking-tighter leading-tight">
-                  {categories[currentStep].title} <br />
-                  <span className="text-[#D9F99D] text-[28px] md:text-[36px]">옵션을 선택해 주세요.</span>
+                <h2 className="text-2xl lg:text-[44px] font-black tracking-tighter leading-tight">
+                  {categories[currentStep].title} <br className="hidden lg:block" />
+                  <span className="text-[#D9F99D] text-xl lg:text-[36px]">옵션을 선택해 주세요.</span>
                 </h2>
                 <p className="text-slate-500 font-bold text-sm md:text-base break-keep">
                   {categories[currentStep].description}
@@ -709,14 +900,14 @@ export default function Service() {
                 )}
               </div>
 
-              <div className="space-y-6 min-h-[400px] flex flex-col">
+              <div className="space-y-6 lg:min-h-[400px] flex flex-col">
                 {categories[currentStep].subGroups && (
-                  <div className="flex items-center gap-2 overflow-x-auto pb-2 no-scrollbar">
+                  <div className="flex items-center gap-2 overflow-x-auto pb-2 no-scrollbar -mx-4 px-4 lg:mx-0 lg:px-0">
                     {categories[currentStep].subGroups.map((sg) => (
                       <button
                         key={sg.id}
                         onClick={() => setActiveSubTab(sg.id)}
-                        className={`px-4 py-2 rounded-full text-xs font-black whitespace-nowrap transition-all border-2 ${
+                        className={`px-5 py-2.5 rounded-full text-[11px] lg:text-xs font-black whitespace-nowrap transition-all border-2 ${
                           activeSubTab === sg.id
                             ? "bg-[#D9F99D] border-[#D9F99D] text-black"
                             : "border-white/10 text-slate-500 hover:border-white/30 hover:text-white"
@@ -732,7 +923,7 @@ export default function Service() {
                   <div 
                     ref={scrollContainerRef}
                     onScroll={handleScroll}
-                    className="absolute inset-0 overflow-y-auto pr-2 custom-scrollbar max-h-[320px]"
+                    className="overflow-y-auto pr-2 custom-scrollbar max-h-[400px] lg:max-h-[320px] lg:absolute lg:inset-0"
                   >
                     <AnimatePresence mode="wait">
                       <motion.div
@@ -740,7 +931,7 @@ export default function Service() {
                         initial={{ opacity: 0, y: 10 }}
                         animate={{ opacity: 1, y: 0 }}
                         exit={{ opacity: 0, y: -10 }}
-                        className="grid grid-cols-1 gap-3 pb-16"
+                        className="grid grid-cols-1 gap-3 pb-20 lg:pb-16"
                       >
                         {(categories[currentStep].subGroups 
                           ? categories[currentStep].subGroups.find(sg => sg.id === activeSubTab)?.options 
@@ -748,7 +939,7 @@ export default function Service() {
                         )?.map((opt) => (
                           <div
                             key={opt.id}
-                            className={`group p-5 rounded-2xl border-2 text-left transition-all relative overflow-hidden ${
+                            className={`group p-4 lg:p-5 rounded-2xl border-2 text-left transition-all relative overflow-hidden ${
                               selectedOptions[opt.id]
                                 ? "bg-[#D9F99D] border-[#D9F99D] text-black shadow-[0_10px_30px_rgba(217,249,157,0.2)]"
                                 : "border-white/10 text-slate-400 hover:border-[#D9F99D]/40 hover:text-white hover:bg-white/5"
@@ -757,11 +948,11 @@ export default function Service() {
                             <div className="relative z-10 flex items-center justify-between">
                               <button 
                                 onClick={() => handleOptionToggle(categories[currentStep].id, opt.id, opt.price)}
-                                className="flex-1 text-left"
+                                className="flex-1 text-left py-1"
                               >
                                 <div className="space-y-0.5">
-                                  <span className="block text-base font-black tracking-tight">{opt.label}</span>
-                                  <span className={`text-xs font-bold ${selectedOptions[opt.id] ? "text-black/60" : "text-slate-500"}`}>
+                                  <span className="block text-sm lg:text-base font-black tracking-tight">{opt.label}</span>
+                                  <span className={`text-[10px] lg:text-xs font-bold ${selectedOptions[opt.id] ? "text-black/60" : "text-slate-500"}`}>
                                     {(opt as any).isConsultation ? (
                                       "별도 협의"
                                     ) : (
@@ -840,37 +1031,39 @@ export default function Service() {
                 </div>
               </div>
 
-              <div className="flex items-center gap-3 pt-6">
+              <div className="flex items-center gap-3 pt-6 lg:pt-6">
                 <button
                   disabled={currentStep === 0}
                   onClick={() => setCurrentStep(prev => prev - 1)}
-                  className={`px-8 py-4 rounded-full font-black text-base transition-all border-2 ${
+                  className={`px-6 lg:px-8 py-3.5 lg:py-4 rounded-full font-black text-sm lg:text-base transition-all border-2 ${
                     currentStep === 0 
                       ? "border-white/5 text-white/5 cursor-not-allowed" 
                       : "border-white/20 text-white/60 hover:border-[#D9F99D] hover:text-[#D9F99D]"
                   }`}
                 >
-                  이전 단계
+                  이전
                 </button>
                 <button
                   onClick={() => {
                     if (currentStep < categories.length - 1) {
                       setCurrentStep(prev => prev + 1);
+                    } else {
+                      document.getElementById('brand-summary')?.scrollIntoView({ behavior: 'smooth' });
                     }
                   }}
-                  className={`flex-1 py-4 rounded-full font-black text-base transition-all ${
+                  className={`flex-1 py-3.5 lg:py-4 rounded-full font-black text-sm lg:text-base transition-all ${
                     currentStep === categories.length - 1
-                      ? "bg-white/5 text-white/20 cursor-not-allowed border border-white/5"
+                      ? "bg-[#D9F99D] text-black shadow-[0_10px_30px_rgba(217,249,157,0.3)]"
                       : "bg-white text-black hover:bg-[#D9F99D] hover:text-black hover:shadow-[0_10px_30px_rgba(217,249,157,0.3)]"
                   }`}
                 >
-                  {currentStep === categories.length - 1 ? "마지막 단계입니다" : "다음 단계로"}
+                  {currentStep === categories.length - 1 ? "견적 확인하기" : "다음 단계로"}
                 </button>
               </div>
             </div>
 
             {/* Right: Summary Area */}
-            <div className="sticky top-32">
+            <div id="brand-summary" className="sticky top-10 lg:top-32 pt-10 lg:pt-0">
               <div className="bg-white/5 rounded-[40px] p-8 md:p-10 border border-white/10 shadow-2xl backdrop-blur-xl relative overflow-hidden">
                 {/* Decorative Background Glow */}
                 <div className="absolute -top-24 -right-24 w-64 h-64 bg-[#6366F1]/10 blur-[100px] pointer-events-none" />
@@ -965,13 +1158,13 @@ export default function Service() {
 
                 <div className="pt-8 border-t border-white/10 relative z-10">
                   <div className="flex items-end justify-between mb-8">
-                    <span className="text-slate-400 font-bold text-base">총 예상 견적</span>
+                    <span className="text-slate-400 font-bold text-sm lg:text-base">총 예상 견적</span>
                     <div className="text-right">
                       <motion.span 
                         key={totalPrice}
                         initial={{ opacity: 0, y: 10 }}
                         animate={{ opacity: 1, y: 0 }}
-                        className="text-[36px] md:text-[44px] font-black text-[#D9F99D] leading-none block drop-shadow-[0_0_15px_rgba(217,249,157,0.3)]"
+                        className="text-3xl lg:text-[44px] font-black text-[#D9F99D] leading-none block drop-shadow-[0_0_15px_rgba(217,249,157,0.3)]"
                       >
                         {(totalPrice / 10000).toLocaleString()}만 원
                         {Object.keys(selectedOptions).some(id => {
@@ -986,7 +1179,7 @@ export default function Service() {
                           return isStarting;
                         }) && "~"}
                       </motion.span>
-                      <span className="text-slate-500 text-xs font-bold mt-1.5 block">VAT 별도</span>
+                      <span className="text-slate-500 text-[10px] lg:text-xs font-bold mt-1.5 block">VAT 별도</span>
                     </div>
                   </div>
 
@@ -994,10 +1187,15 @@ export default function Service() {
                     href="https://open.kakao.com/me/brandone"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="w-full py-5 bg-[#6366F1] text-white rounded-2xl font-black text-lg hover:shadow-[0_15px_40px_rgba(99,102,241,0.4)] transition-all flex items-center justify-center gap-2 active:scale-[0.98]"
+                    className="w-full py-5 bg-[#6366F1] text-white rounded-2xl font-black text-lg hover:shadow-[0_15px_40px_rgba(99,102,241,0.4)] transition-all flex items-center justify-center gap-2 active:scale-[0.98] text-center"
                   >
-                    상담 신청하고 확정 견적 받기
-                    <ArrowRight className="w-5 h-5" />
+                    <span className="lg:hidden text-base leading-tight">
+                      상담 신청하고<br />확정 견적 받기
+                    </span>
+                    <span className="hidden lg:inline">
+                      상담 신청하고 확정 견적 받기
+                    </span>
+                    <ArrowRight className="w-5 h-5 shrink-0" />
                   </a>
                   <p className="text-center text-slate-600 text-xs font-medium mt-5">
                     * 위 견적은 선택하신 항목에 따른 예상 비용이며, <br />
@@ -1008,9 +1206,35 @@ export default function Service() {
             </div>
           </div>
         </div>
+
+        {/* Mobile Floating Total Bar */}
+        <AnimatePresence>
+          {isEstimateInView && Object.keys(selectedOptions).length > 0 && (
+            <motion.div 
+              initial={{ y: 100 }}
+              animate={{ y: 0 }}
+              exit={{ y: 100 }}
+              className="lg:hidden fixed bottom-0 left-0 right-0 z-[60] bg-[#0f172a]/95 backdrop-blur-xl border-t border-white/10 p-4 pb-8 flex items-center justify-between"
+            >
+              <div className="flex flex-col">
+                <span className="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-0.5">Current Est.</span>
+                <span className="text-xl font-black text-[#D9F99D]">
+                  {(totalPrice / 10000).toLocaleString()}만 원
+                </span>
+              </div>
+              <button 
+                onClick={() => document.getElementById('brand-summary')?.scrollIntoView({ behavior: 'smooth' })}
+                className="px-5 py-2.5 bg-white text-black rounded-full font-black text-xs flex items-center gap-2 shadow-lg active:scale-[0.95] transition-all"
+              >
+                상세 견적 확인
+                <ArrowRight size={14} />
+              </button>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </section>
 
-      <QuickMenu />
+      <QuickMenu isShifted={isEstimateInView && Object.keys(selectedOptions).length > 0} />
       <Footer className="bg-[#020617]" />
 
       {/* Interactive Overlay */}
@@ -1020,195 +1244,253 @@ export default function Service() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[100] flex items-center justify-center p-6 bg-slate-950/40 backdrop-blur-sm"
+            className="fixed inset-0 z-[200] flex items-end lg:items-center justify-center bg-slate-950/60 backdrop-blur-md"
           >
+            {/* Background Backdrop for clicking outside (Desktop) */}
+            <div className="absolute inset-0 hidden lg:block" onClick={handleClose} />
+            
             <motion.div
-              initial={{ scale: 0.9, opacity: 0, y: 20 }}
-              animate={{ scale: 1, opacity: 1, y: 0 }}
-              exit={{ scale: 0.9, opacity: 0, y: 20 }}
-              className="bg-white w-full max-w-2xl max-h-[90vh] rounded-[40px] overflow-hidden shadow-2xl relative flex flex-col"
+              initial={window.innerWidth < 1024 ? { y: "100%" } : { scale: 0.9, opacity: 0, y: 20 }}
+              animate={window.innerWidth < 1024 ? { y: 0 } : { scale: 1, opacity: 1, y: 0 }}
+              exit={window.innerWidth < 1024 ? { y: "100%" } : { scale: 0.9, opacity: 0, y: 20 }}
+              transition={{ type: "spring", damping: 25, stiffness: 200 }}
+              className="bg-white w-full lg:max-w-2xl h-[94vh] lg:h-auto lg:max-h-[90vh] rounded-t-[40px] lg:rounded-[40px] overflow-hidden shadow-2xl relative flex flex-col"
             >
-              {/* Sticky Header */}
-              <div className="p-8 md:p-12 pb-6 shrink-0 relative border-b border-slate-50">
+              {/* Header (Responsive) */}
+              <div className="shrink-0 relative">
+                {/* Mobile Handle Bar */}
+                <div className="lg:hidden w-12 h-1.5 bg-slate-200 rounded-full mx-auto my-4" />
+                
+                {/* Close Button */}
                 <button 
                   onClick={handleClose}
-                  className="absolute top-8 right-8 w-12 h-12 rounded-full bg-slate-50 flex items-center justify-center text-slate-400 hover:text-slate-900 hover:bg-slate-100 transition-all z-10"
+                  className="absolute top-4 lg:top-8 right-6 lg:right-8 w-10 h-10 lg:w-12 lg:h-12 rounded-full bg-slate-50 flex items-center justify-center text-slate-400 hover:text-slate-900 hover:bg-slate-100 transition-all z-20"
                 >
-                  <X size={24} />
+                  {window.innerWidth < 1024 ? <ChevronLeft size={20} className="mr-0.5" /> : <X size={24} />}
                 </button>
 
-                <div className={`inline-flex items-center px-4 py-1.5 rounded-full ${selectedItem.accentBg} text-white text-xs font-black uppercase tracking-widest mb-4`}>
-                  {selectedItem.name}
-                </div>
-                {viewMode === "guide" ? (
-                  <div className="flex gap-6">
-                    <div className={`w-1.5 rounded-full ${selectedItem.accentBg} shrink-0`} />
-                    <div className="space-y-2">
-                      <div className="relative inline-block">
-                        <h3 className="text-2xl md:text-3xl font-black text-slate-900 tracking-tight leading-tight relative z-10">
-                          {selectedItem.title}
-                        </h3>
-                        <div className={`absolute bottom-0.5 left-0 w-full h-3.5 ${selectedItem.accentBg} opacity-40 z-0`} />
-                      </div>
-                      <p className="text-xl md:text-2xl font-black text-slate-900 tracking-tight leading-tight break-keep">
+                <div className="p-6 md:p-12 pb-4">
+                  <div className={`inline-flex items-center px-4 py-1.5 rounded-full ${selectedItem.accentBg} text-white text-[10px] font-black uppercase tracking-[0.2em] mb-6`}>
+                    {selectedItem.name}
+                  </div>
+                  
+                  <div className="flex gap-4 lg:gap-6 items-center lg:items-start">
+                    <div className="w-20 h-20 lg:w-24 lg:h-24 shrink-0 flex items-center justify-center bg-slate-50 rounded-3xl lg:bg-transparent">
+                      <ServiceCardMobile item={selectedItem} size="icon" active={true} />
+                    </div>
+                    <div className="space-y-1 text-left">
+                      <h3 className="text-2xl lg:text-3xl font-black text-slate-900 tracking-tight leading-tight">
+                        {selectedItem.title}
+                      </h3>
+                      <p className="text-lg lg:text-xl font-bold text-slate-400 tracking-tight leading-tight break-keep">
                         {selectedItem.subTitle}
                       </p>
                     </div>
                   </div>
-                ) : (
-                  <h3 className="text-2xl md:text-3xl font-black text-slate-900 tracking-tight leading-tight">
-                    Service Price List
-                  </h3>
-                )}
+                </div>
+
+                {/* Mode Tabs (Mobile Optimized) */}
+                <div className="px-6 lg:px-12 flex border-b border-slate-100">
+                  <button 
+                    onClick={() => setViewMode("guide")}
+                    className={`flex-1 py-4 text-sm font-black transition-all border-b-4 ${
+                      viewMode === "guide" 
+                        ? `border-brand-primary text-brand-primary` 
+                        : "border-transparent text-slate-300"
+                    }`}
+                  >
+                    핵심 가이드
+                  </button>
+                  <button 
+                    onClick={() => setViewMode("price")}
+                    className={`flex-1 py-4 text-sm font-black transition-all border-b-4 ${
+                      viewMode === "price" 
+                        ? `border-brand-primary text-brand-primary` 
+                        : "border-transparent text-slate-300"
+                    }`}
+                  >
+                    가격 리스트
+                  </button>
+                </div>
               </div>
 
               {/* Scrollable Content Area */}
-              <div className="flex-1 overflow-y-auto p-8 md:p-12 pt-8 custom-scrollbar">
-                {viewMode === "guide" ? (
-                  <motion.div
-                    key="guide"
-                    initial={{ opacity: 0, x: 20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    exit={{ opacity: 0, x: -20 }}
-                  >
-                    <div className="mb-10">
-                      <p className="text-xl md:text-2xl font-black text-brand-primary italic leading-tight mb-6 break-keep whitespace-pre-line">
-                        "{selectedItem.quote}"
-                      </p>
-                      <div className="space-y-6">
-                        <div>
-                          <span className="text-xs font-black uppercase tracking-widest text-rose-500 mb-2 block">Pain Point</span>
-                          <p className="text-slate-600 font-bold leading-relaxed break-keep whitespace-pre-line">{selectedItem.painPoint}</p>
-                        </div>
-                        <div>
-                          <span className="text-xs font-black uppercase tracking-widest text-emerald-500 mb-2 block">Guide / Solution</span>
-                          <p className="text-slate-600 font-bold leading-relaxed break-keep whitespace-pre-line">{selectedItem.guideText}</p>
-                        </div>
-                      </div>
-                    </div>
-                  </motion.div>
-                ) : (
-                  <motion.div
-                    key="price"
-                    initial={{ opacity: 0, x: 20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    exit={{ opacity: 0, x: -20 }}
-                    className="space-y-4"
-                  >
-                    {selectedItem.prices.map((p, idx) => {
-                      const isExpanded = expandedPriceIdx === idx;
-                      return (
-                        <div 
-                          key={idx} 
-                          className={`flex flex-col p-6 border-2 transition-all duration-300 rounded-3xl cursor-pointer ${
-                            isExpanded 
-                              ? `border-brand-primary/40 bg-slate-50/50` 
-                              : "border-slate-50 hover:border-brand-primary/20"
-                          }`}
-                          onClick={() => setExpandedPriceIdx(isExpanded ? null : idx)}
-                        >
-                          <div className="flex items-center justify-between gap-4">
-                            <div className="flex-1">
-                              <h4 className="text-lg font-black text-slate-900">{p.label}</h4>
-                            </div>
-                            <div className="flex items-center gap-4">
-                              <span className={`text-xl md:text-2xl font-black ${selectedItem.color}`}>{p.price}</span>
-                              <motion.div
-                                animate={{ rotate: isExpanded ? 180 : 0 }}
-                                className="text-slate-400"
-                              >
-                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
-                                  <path d="M6 9l6 6 6-6" />
-                                </svg>
-                              </motion.div>
-                            </div>
-                          </div>
-                          
-                          <AnimatePresence>
-                            {isExpanded && (
-                              <motion.div
-                                initial={{ height: 0, opacity: 0, marginTop: 0 }}
-                                animate={{ height: "auto", opacity: 1, marginTop: 16 }}
-                                exit={{ height: 0, opacity: 0, marginTop: 0 }}
-                                className="overflow-hidden"
-                              >
-                                <div className="space-y-2 pt-2 border-t border-slate-200/60">
-                                  {p.desc.split('\n').map((line, i) => (
-                                    <div key={i} className="flex gap-2 text-sm font-bold text-slate-500 leading-relaxed">
-                                      <span className={`shrink-0 ${selectedItem.color} opacity-60`}>•</span>
-                                      <span className="break-keep">{line}</span>
-                                    </div>
-                                  ))}
-                                </div>
-                              </motion.div>
-                            )}
-                          </AnimatePresence>
-                        </div>
-                      );
-                    })}
-                    <div className="p-6 bg-slate-50 rounded-3xl mt-6">
-                      <div className="space-y-1.5">
-                        {(selectedItem as any).notes?.map((note: string, i: number) => (
-                          <p key={i} className="text-sm text-slate-500 font-bold leading-relaxed flex gap-2">
-                            <span className="shrink-0 opacity-60">※</span>
-                            <span>{note}</span>
-                          </p>
-                        ))}
-                        <p className="text-sm text-slate-400 font-medium leading-relaxed mt-2 pt-2 border-t border-slate-200/60">
-                          * 위 가격은 프로젝트의 규모와 난이도에 따라 변동될 수 있습니다. <br />
-                          * 상세 견적은 상담을 통해 확정됩니다.
+              <div 
+                ref={modalContainerRef}
+                className="flex-1 overflow-y-auto p-6 lg:p-12 pt-8 custom-scrollbar bg-white"
+              >
+                <AnimatePresence mode="wait">
+                  {viewMode === "guide" ? (
+                    <motion.div
+                      key="guide-optimized"
+                      initial={{ opacity: 0, x: -10 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      exit={{ opacity: 0, x: 10 }}
+                      className="space-y-10 lg:space-y-12 pb-20"
+                    >
+                      {/* Quote Section */}
+                      <div className="relative text-left">
+                        <div className={`absolute -left-6 top-0 bottom-0 w-1 ${selectedItem.accentBg} opacity-20 rounded-full lg:hidden`} />
+                        <p className="text-xl lg:text-3xl font-black text-brand-primary italic leading-snug break-keep whitespace-pre-line pl-4 lg:pl-0">
+                          "{selectedItem.quote}"
                         </p>
                       </div>
-                    </div>
-                  </motion.div>
-                )}
+
+                      {/* Content Cards (Optimized for Mobile) */}
+                      <div className="space-y-8 text-left">
+                        <div>
+                          <div className="flex items-center gap-2 mb-4">
+                            <div className="w-6 h-6 rounded-lg bg-rose-100 flex items-center justify-center text-rose-500">
+                              <X size={14} strokeWidth={3} />
+                            </div>
+                            <span className="text-xs font-black uppercase tracking-widest text-rose-500 pt-0.5">Pain Point</span>
+                          </div>
+                          <div className="p-6 bg-rose-50/30 rounded-[32px] border border-rose-100/50">
+                            <p className="text-sm lg:text-base font-bold text-slate-600 leading-relaxed break-keep whitespace-pre-line">
+                              {selectedItem.painPoint}
+                            </p>
+                          </div>
+                        </div>
+
+                        <div>
+                          <div className="flex items-center gap-2 mb-4">
+                            <div className="w-6 h-6 rounded-lg bg-emerald-100 flex items-center justify-center text-emerald-500">
+                              <CheckCircle2 size={14} strokeWidth={3} />
+                            </div>
+                            <span className="text-xs font-black uppercase tracking-widest text-emerald-500 pt-0.5">Guide / Solution</span>
+                          </div>
+                          <div className="p-6 bg-emerald-50/30 rounded-[32px] border border-emerald-100/50">
+                            <p className="text-sm lg:text-base font-bold text-slate-600 leading-relaxed break-keep whitespace-pre-line">
+                              {selectedItem.guideText}
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Strategic Note for Mobile */}
+                      <div className="p-6 bg-slate-50 rounded-[32px] border border-slate-100 relative overflow-hidden group text-left">
+                        <div className="relative z-10">
+                          <p className="text-[10px] font-black text-brand-primary uppercase tracking-[0.2em] mb-2 opacity-60 italic">Strategic Insight</p>
+                          <p className="text-sm font-black text-slate-900 leading-relaxed break-keep">
+                            단순한 작업이 아닌 브랜드의 본질을 강화하는 <br className="lg:hidden" />
+                            <span className="text-brand-primary underline underline-offset-4">성장 로드맵</span>을 제안합니다.
+                          </p>
+                        </div>
+                        <div className={`absolute -right-8 -bottom-8 w-24 h-24 ${selectedItem.accentBg} opacity-5 rounded-full`} />
+                      </div>
+                    </motion.div>
+                  ) : (
+                    <motion.div
+                      key="price-optimized"
+                      initial={{ opacity: 0, x: 10 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      exit={{ opacity: 0, x: -10 }}
+                      className="space-y-4 lg:space-y-6 pb-24 text-left"
+                    >
+                      {/* Price Header Note */}
+                      <div className="bg-brand-primary/5 p-4 rounded-2xl mb-6">
+                        <p className="text-[10px] font-bold text-brand-primary leading-tight text-center break-keep">
+                          ※ 모든 서비스는 1:1 디렉팅을 통해 브랜드에 최적화되어 제공됩니다.
+                        </p>
+                      </div>
+
+                      {selectedItem.prices.map((p, idx) => {
+                        const isExpanded = expandedPriceIdx === idx;
+                        return (
+                          <div 
+                            key={idx} 
+                            className={`flex flex-col p-6 lg:p-8 border-2 transition-all duration-300 rounded-[32px] cursor-pointer ${
+                              isExpanded 
+                                ? `border-brand-primary bg-slate-50/50 shadow-lg` 
+                                : "border-slate-50 hover:border-brand-primary/20 bg-white"
+                            }`}
+                            onClick={() => setExpandedPriceIdx(isExpanded ? null : idx)}
+                          >
+                            <div className="flex items-start justify-between gap-4">
+                              <div className="flex-1">
+                                <h4 className={`text-base lg:text-lg font-black leading-tight ${isExpanded ? 'text-brand-primary' : 'text-slate-900'}`}>{p.label}</h4>
+                                {!isExpanded && (
+                                  <p className="text-[10px] font-bold text-slate-400 mt-1 uppercase tracking-wider">Click for details</p>
+                                )}
+                              </div>
+                              <div className="flex items-center gap-3">
+                                <span className={`text-lg lg:text-2xl font-black ${selectedItem.color}`}>{p.price}</span>
+                                <motion.div
+                                  animate={{ rotate: isExpanded ? 180 : 0 }}
+                                  className={isExpanded ? 'text-brand-primary' : 'text-slate-300'}
+                                >
+                                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+                                    <path d="M6 9l6 6 6-6" />
+                                  </svg>
+                                </motion.div>
+                              </div>
+                            </div>
+                            
+                            <AnimatePresence>
+                              {isExpanded && (
+                                <motion.div
+                                  initial={{ height: 0, opacity: 0, marginTop: 0 }}
+                                  animate={{ height: "auto", opacity: 1, marginTop: 24 }}
+                                  exit={{ height: 0, opacity: 0, marginTop: 0 }}
+                                  className="overflow-hidden"
+                                >
+                                  <div className="space-y-3 pt-6 border-t border-slate-200/60">
+                                    {p.desc.split('\n').map((line, i) => (
+                                      <div key={i} className="flex gap-2.5 text-xs lg:text-sm font-bold text-slate-500 leading-relaxed">
+                                        <div className={`w-1.5 h-1.5 rounded-full ${selectedItem.accentBg} mt-1.5 shrink-0 opacity-60`} />
+                                        <span className="break-keep">{line}</span>
+                                      </div>
+                                    ))}
+                                  </div>
+                                </motion.div>
+                              )}
+                            </AnimatePresence>
+                          </div>
+                        );
+                      })}
+                      
+                      {/* Supplemental Notes */}
+                      <div className="p-6 bg-slate-50 rounded-[32px] mt-8 border border-slate-100">
+                        <div className="space-y-2">
+                          {(selectedItem as any).notes?.map((note: string, i: number) => (
+                            <p key={i} className="text-xs text-slate-500 font-bold leading-relaxed flex gap-2">
+                              <span className="shrink-0 opacity-40">※</span>
+                              <span className="break-keep">{note}</span>
+                            </p>
+                          ))}
+                          <div className="pt-4 border-t border-slate-200 mt-2">
+                            <p className="text-[10px] text-slate-400 font-medium leading-relaxed">
+                              * 견적은 프로젝트 규모와 난이도에 따라 변동될 수 있습니다. <br />
+                              * 상세 견적은 상담을 통해 확정됩니다.
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
               </div>
 
-              {/* Sticky Footer Action */}
-              <div className="p-8 md:p-12 pt-6 shrink-0 border-t border-slate-100 bg-white flex justify-between items-center">
-                {viewMode === "guide" ? (
-                  <>
-                    <div className="flex items-center gap-2 text-slate-400 font-bold text-sm">
-                      <span className="w-2 h-2 rounded-full bg-brand-primary" />
-                      Guide View
-                    </div>
-                    <button 
-                      onClick={() => setViewMode("price")}
-                      className="flex items-center gap-2 px-8 py-4 bg-slate-900 text-white rounded-full font-black hover:bg-brand-primary transition-all group"
-                    >
-                      가격 리스트 확인하기
-                      <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-                    </button>
-                  </>
-                ) : (
-                  <>
-                    <button 
-                      onClick={() => setViewMode("guide")}
-                      className="text-slate-400 font-black hover:text-slate-900 transition-colors"
-                    >
-                      ← 가이드 다시보기
-                    </button>
-                    <div className="flex items-center gap-3">
-                      <button 
-                        onClick={() => {
-                          handleClose();
-                          scrollToCalculator();
-                        }}
-                        className="px-8 py-4 bg-[#D9F99D] text-slate-900 rounded-full font-black hover:shadow-lg hover:shadow-[#D9F99D]/30 transition-all"
-                      >
-                        가상 견적
-                      </button>
-                      <a 
-                        href="https://open.kakao.com/me/brandone"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="px-8 py-4 bg-brand-primary text-white rounded-full font-black hover:shadow-lg hover:shadow-brand-primary/30 transition-all"
-                      >
-                        상담 신청
-                      </a>
-                    </div>
-                  </>
-                )}
+              {/* Sticky Footer (Optimized for Mobile) */}
+              <div className="p-6 lg:p-12 pt-6 shrink-0 border-t border-slate-100 bg-white/80 backdrop-blur-md flex gap-3 items-center">
+                <button 
+                  onClick={() => {
+                    handleClose();
+                    scrollToCalculator();
+                  }}
+                  className="flex-1 py-4 lg:py-5 bg-[#D9F99D] text-slate-900 rounded-[20px] font-black text-sm lg:text-lg hover:shadow-lg hover:shadow-[#D9F99D]/30 transition-all text-center"
+                >
+                  가상 견적
+                </button>
+                <a 
+                  href="https://open.kakao.com/me/brandone"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex-[1.5] py-4 lg:py-5 bg-brand-primary text-white rounded-[20px] font-black text-sm lg:text-lg shadow-lg shadow-brand-primary/20 hover:shadow-xl transition-all flex items-center justify-center gap-2 text-center"
+                >
+                  상담 신청
+                  <ArrowRight size={18} />
+                </a>
               </div>
             </motion.div>
           </motion.div>

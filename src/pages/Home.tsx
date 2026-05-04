@@ -1483,7 +1483,7 @@ export default function Home() {
                   <motion.a href="tel:070-8849-6806" whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} className="flex items-center gap-3 bg-white text-slate-900 px-8 py-5 rounded-2xl font-black text-lg shadow-xl shrink-0">
                     <Phone className="w-6 h-6 text-brand-primary" /> 전화 문의
                   </motion.a>
-                  <motion.a href="https://open.kakao.com/me/brandone" target="_blank" rel="noopener noreferrer" whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} className="flex items-center gap-3 bg-[#FEE500] text-[#3C1E1E] px-8 py-5 rounded-2xl font-black text-lg shadow-xl shrink-0">
+                  <motion.a href="https://open.kakao.com/o/gdfBodti" target="_blank" rel="noopener noreferrer" whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} className="flex items-center gap-3 bg-[#FEE500] text-[#3C1E1E] px-8 py-5 rounded-2xl font-black text-lg shadow-xl shrink-0">
                     <MessageCircle className="w-6 h-6" /> 카톡 문의
                   </motion.a>
                 </div>
@@ -1592,7 +1592,7 @@ export default function Home() {
                 <ArrowRight className="w-5 h-5 text-slate-300" />
               </a>
 
-              <a href="https://open.kakao.com/me/brandone" target="_blank" rel="noopener noreferrer" className="flex items-center justify-between bg-[#FEE500] p-6 rounded-2xl shadow-lg text-[#3C1E1E]">
+              <a href="https://open.kakao.com/o/gdfBodti" target="_blank" rel="noopener noreferrer" className="flex items-center justify-between bg-[#FEE500] p-6 rounded-2xl shadow-lg text-[#3C1E1E]">
                 <div className="flex items-center gap-4">
                   <div className="w-12 h-12 bg-black/5 rounded-xl flex items-center justify-center">
                     <MessageCircle className="w-6 h-6" />

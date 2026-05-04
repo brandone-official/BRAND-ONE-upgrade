@@ -22,7 +22,7 @@ const QuickMenu = ({ isShifted = false }: { isShifted?: boolean }) => {
         </motion.a>
 
         <motion.a
-          href="https://open.kakao.com/me/brandone"
+          href="https://open.kakao.com/o/gdfBodti"
           target="_blank"
           rel="noopener noreferrer"
           whileHover={{ scale: 1.05, x: -5 }}
@@ -55,7 +55,7 @@ const QuickMenu = ({ isShifted = false }: { isShifted?: boolean }) => {
 
               <motion.a
                 key="mobile-kakao"
-                href="https://open.kakao.com/me/brandone"
+                href="https://open.kakao.com/o/gdfBodti"
                 target="_blank"
                 rel="noopener noreferrer"
                 initial={{ opacity: 0, y: 10, scale: 0.8 }}

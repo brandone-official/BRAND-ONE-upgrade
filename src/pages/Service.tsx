@@ -1184,7 +1184,7 @@ export default function Service() {
                   </div>
 
                   <a 
-                    href="https://open.kakao.com/me/brandone"
+                    href="https://open.kakao.com/o/gdfBodti"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="w-full py-5 bg-[#6366F1] text-white rounded-2xl font-black text-lg hover:shadow-[0_15px_40px_rgba(99,102,241,0.4)] transition-all flex items-center justify-center gap-2 active:scale-[0.98] text-center"
@@ -1483,7 +1483,7 @@ export default function Service() {
                   가상 견적
                 </button>
                 <a 
-                  href="https://open.kakao.com/me/brandone"
+                  href="https://open.kakao.com/o/gdfBodti"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex-[1.5] py-4 lg:py-5 bg-brand-primary text-white rounded-[20px] font-black text-sm lg:text-lg shadow-lg shadow-brand-primary/20 hover:shadow-xl transition-all flex items-center justify-center gap-2 text-center"

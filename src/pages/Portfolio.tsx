@@ -2412,7 +2412,7 @@ export default function Portfolio() {
               className="flex flex-col md:flex-row items-center justify-center gap-4"
             >
             <a 
-              href="https://open.kakao.com/me/brandone"
+              href="https://open.kakao.com/o/gdfBodti"
               target="_blank"
               rel="noopener noreferrer"
               className="w-full max-w-[300px] md:w-auto px-10 py-5 bg-[#FEE500] text-[#3C1E1E] rounded-2xl font-black text-lg shadow-xl shadow-[#FEE500]/20 hover:scale-105 transition-transform flex items-center justify-center gap-2"
